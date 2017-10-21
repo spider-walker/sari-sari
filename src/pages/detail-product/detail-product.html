@@ -1,0 +1,47 @@
+<ion-header>
+    <ion-navbar color="danger">
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Product Detail</ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+    <ion-list>  
+        <ion-item>
+            Product Name:{{product?.product_name}}
+        </ion-item>
+        <ion-item>
+            Product ID:{{product?.product_id}}
+
+        </ion-item>
+        <ion-item>
+            Product Price:{{product?.product_price}}
+
+        </ion-item>
+        <ion-item>
+            Initial Stock:{{product?.initial_stock}}                
+        </ion-item>
+        <ion-item>
+            Quantity:{{product?.quantity}}
+
+        </ion-item>
+        <ion-item>
+            Warning Point:{{product?.warning_point}}
+        </ion-item>
+        <ion-item>
+            Details:{{product?.description}}
+        </ion-item>
+        <ion-item>
+            Date: {{product?.date_created}}                
+        </ion-item>
+    </ion-list>
+    <ion-list>
+        <ion-item>
+            <a ion-button block color="primary" (click)="edit()" >Edit Product</a>
+
+        </ion-item>
+    </ion-list>
+</ion-content>

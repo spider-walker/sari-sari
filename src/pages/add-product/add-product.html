@@ -1,0 +1,61 @@
+<ion-header>
+
+    <ion-navbar color="danger">
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Add Product</ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+    <form [formGroup]="productForm" novalidate (ngSubmit)="save(productForm)">
+        <ion-list>  
+            <ion-item>
+                <ion-label>Product Name:</ion-label>
+                <ion-input type='text' formControlName="product_name"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Product ID:</ion-label>
+                <ion-input type='text' formControlName="product_id"></ion-input>
+                
+            </ion-item>
+            <ion-item>
+                <ion-label>Product Price:</ion-label>
+                <ion-input type='text' formControlName="product_price"></ion-input>
+               
+            </ion-item>
+            <ion-item>
+                <ion-label>Initial Stock:</ion-label>
+                <ion-input type='text' formControlName="initial_stock"></ion-input>                
+            </ion-item>
+            <ion-item>
+                <ion-label>Quantity:</ion-label>
+                <ion-input type='text' formControlName="quantity"></ion-input>
+                
+            </ion-item>
+            <ion-item>
+                <ion-label>Warning Point:</ion-label>
+                <ion-input type='text' formControlName="warning_point"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Details:</ion-label>
+                <ion-input type='text' formControlName="description"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Date:</ion-label>
+                <ion-datetime  displayFormat="YYYY-MM-DD" templateType="popover" formControlName="date_created" ></ion-datetime>
+                
+            </ion-item>
+        </ion-list>
+        <ion-list>
+            <ion-item>
+                <button  ion-button block color="primary" type="submit" >Save Product</button>
+
+            </ion-item>
+        </ion-list>
+
+
+    </form>
+</ion-content>

@@ -1,0 +1,27 @@
+import {Component} from '@angular/core';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
+
+
+@IonicPage()
+@Component({
+    selector: 'page-home',
+    templateUrl: 'home.html',
+})
+export class HomePage {
+    menu_pages: Array<{title: string, component: any}>;
+    constructor(public navCtrl: NavController, public navParams: NavParams) {
+        this.menu_pages = [
+            {title: 'Add', component: 'AddProductPage'},
+            {title: 'Sell', component: 'SellProductPage'},
+            {title: 'Update', component: 'ListProductPage'},
+            {title: 'Inventory List', component: 'ListProductPage'},
+            {title: 'Critical Products', component: 'CriticalProductPage'},
+            {title: 'About', component: 'AboutPage'},
+        ];
+    }
+ 
+    openPage(page) {
+        this.navCtrl.setRoot(page.component);
+    }
+
+}
