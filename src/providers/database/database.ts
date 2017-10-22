@@ -89,11 +89,11 @@ export class Database {
             });
 
     }
-    
+
     public getSearchProducts(search: string) {
         let products = Array<Product>();
         return this.dbPromise
-            .then(db => db.execute("SELECT * FROM " + TABLE_PRODUCTS + " where product_name like '%" + search + "%' or product_id like '%" + search + "%'"))
+            .then(db => db.execute("SELECT * FROM " + TABLE_PRODUCTS + " where (product_name like '%" + search + "%' or product_id like '%" + search + "%')"))
             .then(resultSet => {
                 if (resultSet.rows.length > 0) {
                     for (let i = 0; i < resultSet.rows.length; i++) {
@@ -143,11 +143,13 @@ export class Database {
         let sql = "SELECT " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
             + TABLE_PRODUCTS
             + " LEFT JOIN " + TABLE_PRODUCT_TX + " ON " + TABLE_PRODUCT_TX + ".pid = " + TABLE_PRODUCTS + ".id ";
-        if (search == undefined|| search.length == 0 || search == null ) {
+        sql += " where " + TABLE_PRODUCTS + ".quantity<=" + TABLE_PRODUCTS + ".initial_stock ";
+        if (search == undefined || search.length == 0 || search == null) {
 
         } else {
-            sql += " where product_name like '%" + search + "%' or product_id like '%" + search + "%'";
+            sql += " and (product_name like '%" + search + "%' or product_id like '%" + search + "%')";
         }
+
         sql += " group by " + TABLE_PRODUCTS + ".id, product_name,product_id," + TABLE_PRODUCTS + ".product_price,initial_stock," + TABLE_PRODUCTS + ".quantity,warning_point,description,date_created"
         console.log(sql)
         return this.dbPromise
