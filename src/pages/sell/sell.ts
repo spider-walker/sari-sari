@@ -68,7 +68,8 @@ export class SellPage {
                 console.log("ERROR: ", error);
             });
             this.database.insertProductTx(this.productTx).then((result) => {
-                self.showAlert("Success", "Product Sold:" + self.productTx.quantity);
+                let total_price = self.productTx.quantity * self.productTx.product_price;
+                self.showAlert("Success", "Product Sold: " + self.productTx.quantity+"<br/> Total Cost:"+total_price.toFixed(2));
                 (<FormControl> this.productForm.controls['product_price']).setValue(this.product.product_price, {onlySelf: true});
                 (<FormControl> this.productForm.controls['quantity_to_sell']).setValue('0', {onlySelf: true});
 

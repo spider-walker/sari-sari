@@ -25,9 +25,9 @@ export class AddProductPage {
             product_id: ['', [Validators.required, Validators.minLength(2)]],
             product_price: ['',],
             initial_stock: ['0',],
-            quantity: ['0.00',],
+            quantity: ['0',],
             warning_point: ['',],
-            description: ['None',],
+            description: ['',],
             date_created: ['',],
         });
     }
