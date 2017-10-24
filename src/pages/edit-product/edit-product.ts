@@ -59,6 +59,14 @@ export class EditProductPage {
         this.product.quantity = this.productForm.controls['quantity'].value;
         this.product.warning_point = this.productForm.controls['warning_point'].value;
         this.product.description = this.productForm.controls['description'].value;
+        if (!this.productForm.controls['product_name'].valid) {
+            self.showAlert("Please check", "Please enter product name!");
+            return;
+        }
+        if (!this.productForm.controls['description'].valid) {
+            self.showAlert("Please check", "Please enter product details!");
+            return;
+        }
         if (isNaN(this.product.quantity)) {
             self.showAlert("Please check", "Quantity  must be a number!");
             return;
