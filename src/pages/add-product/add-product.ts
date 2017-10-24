@@ -45,6 +45,26 @@ export class AddProductPage {
         this.product.warning_point = this.productForm.controls['warning_point'].value;
         this.product.description = this.productForm.controls['description'].value;
         this.product.date_created = this.productForm.controls['date_created'].value;
+        if (isNaN(this.product.quantity)) {
+            self.showAlert("Please check", "Quantity  must be a number!");
+            return;
+        }
+        if (isNaN(this.product.product_id)) {
+            self.showAlert("Please check", "Product ID  must be a number!");
+            return;
+        }
+        if (isNaN(this.product.product_price)) {
+            self.showAlert("Please check", "Product Price  must be a number!");
+            return;
+        }
+        if (isNaN(this.product.initial_stock)) {
+            self.showAlert("Please check", "Initial Stock  must be a number!");
+            return;
+        } 
+        if (isNaN(this.product.warning_point)) {
+            self.showAlert("Please check", "Warning Point  must be a number!");
+            return;
+        }
         if (this.productForm.valid) {
             this.database.insertProduct(this.product).then((result) => {
                 self.showAlert("Success", "Product details have been saved: Name:" + self.product.product_name);

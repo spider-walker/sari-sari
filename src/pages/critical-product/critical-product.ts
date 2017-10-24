@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {IonicPage, NavController, NavParams} from 'ionic-angular';
 
 import {Database} from '../../providers/database/database';
-import {Product, ProductTx} from '../../models/models';
+import {Product} from '../../models/models';
 
 @IonicPage()
 @Component({

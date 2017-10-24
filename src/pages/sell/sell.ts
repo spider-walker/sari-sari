@@ -44,10 +44,15 @@ export class SellPage {
         var self = this;
         this.productTx = new ProductTx;
         this.productTx.quantity = this.productForm.controls['quantity_to_sell'].value;
-        this.productTx.product_price = this.productForm.controls['product_price'].value;
+
+        this.productTx.product_price = this.product.product_price;
         this.productTx.pid = this.product.id;
         this.productTx.tx_date = moment().format('YYYY-MM-DDTHH:mmZ');
         this.productTx.doctype = "sell";
+        if (isNaN(this.productTx.quantity)) {
+            self.showAlert("Please check", "Quantity to sell must be zero!");
+            return;
+        }
         if (this.productTx.quantity == 0) {
             self.showAlert("Please check", "You can't sell zero amount");
             return;
@@ -59,8 +64,8 @@ export class SellPage {
 
         if (this.productForm.valid) {
             this.product.quantity = this.product.quantity - this.productTx.quantity;
-            if (this.product.quantity<= 0) {
-                self.showAlert("Please check", "You don't have enough stock to sell "+this.productTx.quantity+"!");
+            if (this.product.quantity <0) {
+                self.showAlert("Please check", "You don't have enough stock to sell " + this.productTx.quantity + "!");
                 return;
             }
             this.database.updateProduct(this.product).then((result) => {
@@ -69,7 +74,7 @@ export class SellPage {
             });
             this.database.insertProductTx(this.productTx).then((result) => {
                 let total_price = self.productTx.quantity * self.productTx.product_price;
-                self.showAlert("Success", "Product Sold: " + self.productTx.quantity+"<br/> Total Cost:"+total_price.toFixed(2));
+                self.showAlert("Success", "Product Sold: " + self.productTx.quantity + "<br/> Total Cost:" + total_price.toFixed(2));
                 (<FormControl> this.productForm.controls['product_price']).setValue(this.product.product_price, {onlySelf: true});
                 (<FormControl> this.productForm.controls['quantity_to_sell']).setValue('0', {onlySelf: true});
 
