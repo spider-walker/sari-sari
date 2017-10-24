@@ -89,6 +89,14 @@ export class Database {
             });
 
     }
+    public delete_product(id: number) {
+        return this.dbPromise
+            .then(db => db.execute("delete FROM " + TABLE_PRODUCTS + " where id='" + id + "'"))
+            .then(resultSet => {                
+                return resultSet;
+            });
+
+    }
 
     public getSearchProducts(search: string) {
         let products = Array<Product>();

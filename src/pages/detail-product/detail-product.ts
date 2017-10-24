@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, NavController, NavParams, AlertController} from 'ionic-angular';
 import {Database} from '../../providers/database/database';
 import {Product} from '../../models/models';
 
@@ -13,6 +13,7 @@ export class DetailProductPage {
     constructor(
         private database: Database,
         public navCtrl: NavController,
+        public alertCtrl: AlertController,
         public navParams: NavParams) {
         let id = navParams.get('id');
 
@@ -29,6 +30,43 @@ export class DetailProductPage {
     }
     edit() {
         this.navCtrl.push('EditProductPage', {id: this.product.id})
+    }
+    delete_product() {
+        let confirm = this.alertCtrl.create({
+            title: 'Are you sure?',
+            message: 'You want to remove ' + this.product.product_name + '?',
+            buttons: [
+                {
+                    text: 'No',
+                    handler: () => {
+                        console.log('Disagree clicked');
+                    }
+                },
+                {
+                    text: 'Yes',
+                    handler: () => {
+                        this.database.delete_product(this.product.id).then((result) => {
+                            console.log(result);
+                            this.showAlert('Success','Deleted')
+                            this.navCtrl.setRoot('ListProductPage');
+
+                        }, (error) => {
+                            console.log("ERROR: ", error);
+                        });
+                    }
+                }
+            ]
+        });
+        confirm.present();
+
+    }
+    public showAlert(title: string, message: string) {
+        let alert = this.alertCtrl.create({
+            title: title,
+            subTitle: message,
+            buttons: ['OK']
+        });
+        alert.present();
     }
 
 }
