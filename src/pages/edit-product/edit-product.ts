@@ -12,13 +12,18 @@ export class EditProductPage {
     public productForm: FormGroup; // our form model
     product: Product;
     id: number;
+    source_page:string;
     constructor(
         private _fb: FormBuilder,
         private database: Database,
         public navCtrl: NavController,
         public alertCtrl: AlertController,
         public navParams: NavParams) {
-        
+        this.source_page = this.navParams.get('source_page');
+        if (this.source_page==null){
+            this.source_page='DetailProductPage';
+        }
+
 
     }
 
@@ -82,19 +87,17 @@ export class EditProductPage {
         if (isNaN(this.product.initial_stock)) {
             self.showAlert("Please check", "Initial Stock  must be a number!");
             return;
-        } 
+        }
         if (isNaN(this.product.warning_point)) {
             self.showAlert("Please check", "Warning Point  must be a number!");
             return;
         }
-        if (this.productForm.valid) {
-            this.database.updateProduct(this.product).then((result) => {
-                self.showAlert("Success", "Product details have been saved: Name:" + self.product.product_name);
-                this.navCtrl.push('DetailProductPage', {id: result})
-            }, (error) => {
-                console.log("ERROR: ", error);
-            });
-        }
+        this.database.updateProduct(this.product).then((result) => {
+            self.showAlert("Success", "Product details have been saved: Name:" + self.product.product_name);
+            this.navCtrl.push(this.source_page, {id: result})
+        }, (error) => {
+            console.log("ERROR: ", error);
+        });
 
     }
     public showAlert(title: string, messge: string) {
