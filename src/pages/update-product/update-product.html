@@ -1,0 +1,29 @@
+<ion-header>
+
+    <ion-navbar color="danger">
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Update Product</ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <ion-searchbar placeholder="Search product to to update" [(ngModel)]="search"  [showCancelButton]="shouldShowCancel"   (ionInput)="getItems($event)"  (ionCancel)="onCancel($event)" ></ion-searchbar>
+    <ion-grid>
+        <ion-row>
+            <ion-col>Product Name</ion-col>
+            <ion-col>Quantity</ion-col>
+            <ion-col>Product Price</ion-col>
+            <ion-col>Quantity Sold</ion-col>
+        </ion-row>
+        <ion-row *ngFor="let item of products" (click)="view_product(item.id)" style="border-top:1px #F1F1F1 solid;padding-top:2px">
+            <ion-col>{{item.product_name }}</ion-col>
+            <ion-col>{{item.quantity}}</ion-col>
+            <ion-col>{{item.product_price}}</ion-col>
+            <ion-col>{{item.quantity_sold}}</ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
