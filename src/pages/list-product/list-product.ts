@@ -17,7 +17,10 @@ export class ListProductPage {
         public navCtrl: NavController,
         private database: Database,
         public navParams: NavParams) {
-        this.search_products();
+       
+    }
+    ngOnInit(): void {
+       this.search_products();
     }
 
     getItems(ev: any) {
@@ -26,21 +29,10 @@ export class ListProductPage {
     onCancel(ev: any) {
         console.log(this.search);
     }
-    
-    
+
     search_products() {
         this.result_title = 'Searching.....';
-        this.database.getSearchProducts(this.search).then((result) => {
-            this.products = <Array<Product>> result;
-            if (this.products.length > 0) {
-                this.result_title = this.products.length + ' results found';
-            } else {
-                this.result_title = 'No results found';
-            }
-
-        }, (error) => {
-            console.log("ERROR: ", error);
-        });
+        this.database.getSearchProducts(this.search).then(products => this.products  = products);
     }
     view_product(id: any) {
         this.navCtrl.push('DetailProductPage', {id: id})

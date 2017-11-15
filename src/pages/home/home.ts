@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {IonicPage, NavController, NavParams} from 'ionic-angular';
 
-
 @IonicPage()
 @Component({
     selector: 'page-home',
@@ -19,9 +18,11 @@ export class HomePage {
             {title: 'About', component: 'AboutPage'},
         ];
     }
- 
+
     openPage(page) {
         this.navCtrl.setRoot(page.component);
     }
-
+    go_home() {
+        this.navCtrl.setRoot('HomePage');
+    }
 }

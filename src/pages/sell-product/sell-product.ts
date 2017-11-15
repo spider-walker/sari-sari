@@ -57,5 +57,7 @@ export class SellProductPage {
     view_product(id: any) {
         this.navCtrl.push('SellPage', {id: id})
     }
-
+ go_home() {
+         this.navCtrl.setRoot('HomePage');
+    }
 }

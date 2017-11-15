@@ -100,5 +100,8 @@ export class AddProductPage {
         });
         alert.present();
     }
+     go_home() {
+         this.navCtrl.setRoot('HomePage');
+    }
 
 }

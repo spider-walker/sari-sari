@@ -1,12 +1,11 @@
 <ion-header>
     <ion-navbar color="danger">
-        <button ion-button menuToggle>
+        <button ion-button menuToggle start>
             <ion-icon name="menu"></ion-icon>
-        </button>        
-        <ion-title>Home</ion-title>
-        <ion-icon name="arrow-round-back" style="color:white;text-align: right" (click)="go_home()" end></ion-icon>
-    </ion-navbar>
+        </button>
 
+        <ion-title>Home</ion-title> 
+    </ion-navbar>
 </ion-header>
 
 
@@ -14,7 +13,7 @@
     <h3 text-center>Sari-Sari Store Stock Management</h3>
 
     <p>
-        
+
     </p>
 
     <button color="primary" ion-item *ngFor="let p of menu_pages" (click)="openPage(p)" text-center> {{p.title}} </button>

@@ -1,14 +1,18 @@
 <ion-header>
-
     <ion-navbar color="danger">
-        <button ion-button menuToggle>
+        <button ion-button menuToggle start>
             <ion-icon name="menu"></ion-icon>
         </button>
+
         <ion-title>Edit Product</ion-title>
+
+        <ion-buttons end>
+            <button ion-button (click)="go_home()">
+                <ion-icon name="arrow-round-back" style="color:white;text-align: right"></ion-icon>
+            </button>
+        </ion-buttons>
     </ion-navbar>
-
 </ion-header>
-
 <ion-content padding>
     <form [formGroup]="productForm" novalidate (ngSubmit)="save(productForm)">
         <ion-list>  

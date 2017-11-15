@@ -95,5 +95,8 @@ export class SellPage {
         });
         alert.present();
     }
+     go_home() {
+         this.navCtrl.setRoot('HomePage');
+    }
 
 }

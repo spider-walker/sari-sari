@@ -45,5 +45,7 @@ export class CriticalProductPage {
     view_product(id: any) {
         this.navCtrl.push('DetailProductPage', {id: id})
     }
-
+ go_home() {
+         this.navCtrl.setRoot('HomePage');
+    }
 }

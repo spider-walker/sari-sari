@@ -45,5 +45,7 @@ export class UpdateProductPage {
     edit(id:any) {
         this.navCtrl.push('EditProductPage', {id: id,source_page:'UpdateProductPage'})
     }
-
+ go_home() {
+         this.navCtrl.setRoot('HomePage');
+    }
 }

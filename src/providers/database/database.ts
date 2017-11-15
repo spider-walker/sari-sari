@@ -92,13 +92,13 @@ export class Database {
     public delete_product(id: number) {
         return this.dbPromise
             .then(db => db.execute("delete FROM " + TABLE_PRODUCTS + " where id='" + id + "'"))
-            .then(resultSet => {                
+            .then(resultSet => {
                 return resultSet;
             });
 
     }
 
-    public getSearchProducts(search: string) {
+    public getSearchProducts(search: string):Promise<Product[]> {
         let products = Array<Product>();
         let sql = "SELECT " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
             + TABLE_PRODUCTS
@@ -130,7 +130,7 @@ export class Database {
                         products.push(product)
                     }
                 }
-                return products;
+                return Promise.resolve(products);;
             }).catch(error => {
                 console.log(error);
             });

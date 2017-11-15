@@ -108,5 +108,8 @@ export class EditProductPage {
         });
         alert.present();
     }
+     go_home() {
+         this.navCtrl.setRoot('HomePage');
+    }
 
 }

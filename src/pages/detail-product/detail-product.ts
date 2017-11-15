@@ -67,6 +67,8 @@ export class DetailProductPage {
             buttons: ['OK']
         });
         alert.present();
+    } go_home() {
+         this.navCtrl.setRoot('HomePage');
     }
 
 }
