@@ -31,14 +31,21 @@ export class SellPage {
             quantity_to_sell: ['1',],
         });
         this.id = this.navParams.get('id');
+        this.get_product();
+
+    }
+    get_product() {
         this.database.getProductById(this.id).then((result) => {
             this.product = result;
             (<FormControl> this.productForm.controls['product_price']).setValue(this.product.product_price, {onlySelf: true});
+            if (this.product.warning_point >= this.product.quantity) {
+                this.showAlert("Please check", "This product has reached its critical point!");
+
+            }
 
         }, (error) => {
             console.log("ERROR: ", error);
         });
-
     }
     public save() {
         var self = this;
@@ -64,7 +71,7 @@ export class SellPage {
 
         if (this.productForm.valid) {
             this.product.quantity = this.product.quantity - this.productTx.quantity;
-            if (this.product.quantity <0) {
+            if (this.product.quantity < 0) {
                 self.showAlert("Please check", "You don't have enough stock to sell " + this.productTx.quantity + "!");
                 return;
             }
@@ -77,6 +84,7 @@ export class SellPage {
                 self.showAlert("Success", "Product Sold: " + self.productTx.quantity + "<br/> Total Cost:" + total_price.toFixed(2));
                 (<FormControl> this.productForm.controls['product_price']).setValue(this.product.product_price, {onlySelf: true});
                 (<FormControl> this.productForm.controls['quantity_to_sell']).setValue('0', {onlySelf: true});
+                this.get_product();
 
 
             }, (error) => {
@@ -95,8 +103,8 @@ export class SellPage {
         });
         alert.present();
     }
-     go_home() {
-         this.navCtrl.setRoot('HomePage');
+    go_home() {
+        this.navCtrl.setRoot('HomePage');
     }
 
 }
