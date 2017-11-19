@@ -22,7 +22,7 @@ export class AddProductPage {
     ngOnInit(): void {
         this.productForm = this._fb.group({
             product_name: ['', [Validators.required, Validators.minLength(2)]],
-            product_id: ['', [Validators.required, Validators.minLength(2)]],
+            category_id: ['', [Validators.required, Validators.minLength(2)]],
             product_price: ['',],
             initial_stock: ['0',],
             quantity: ['0',],
@@ -38,7 +38,7 @@ export class AddProductPage {
         var self = this;
         this.product = new Product;
         this.product.product_name = this.productForm.controls['product_name'].value;
-        this.product.product_id = this.productForm.controls['product_id'].value;
+        this.product.category_id = this.productForm.controls['category_id'].value;
         this.product.product_price = this.productForm.controls['product_price'].value;
         this.product.initial_stock = this.productForm.controls['initial_stock'].value;
         this.product.quantity = this.productForm.controls['quantity'].value;
@@ -57,7 +57,7 @@ export class AddProductPage {
             self.showAlert("Please check", "Quantity  must be a number!");
             return;
         }
-        if (isNaN(this.product.product_id)) {
+        if (isNaN(this.product.category_id)) {
             self.showAlert("Please check", "Product ID  must be a number!");
             return;
         }
@@ -76,8 +76,8 @@ export class AddProductPage {
         if (this.productForm.valid) {
             this.database.insertProduct(this.product).then((result) => {
                 self.showAlert("Success", "Product details have been saved: Name:" + self.product.product_name);
-                (<FormControl> this.productForm.controls['product_name']).setValue('', {onlySelf: true});
-                (<FormControl> this.productForm.controls['product_id']).setValue('', {onlySelf: true});
+                (<FormControl> this.productForm.controls['product_name']).setValue('', {onlySelf: true}); 
+                (<FormControl> this.productForm.controls['category_id']).setValue('', {onlySelf: true});
                 (<FormControl> this.productForm.controls['product_price']).setValue('', {onlySelf: true});
                 (<FormControl> this.productForm.controls['initial_stock']).setValue('', {onlySelf: true});
                 (<FormControl> this.productForm.controls['quantity']).setValue('0', {onlySelf: true});

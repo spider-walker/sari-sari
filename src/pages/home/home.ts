@@ -10,6 +10,7 @@ export class HomePage {
     menu_pages: Array<{title: string, component: any}>;
     constructor(public navCtrl: NavController, public navParams: NavParams) {
         this.menu_pages = [
+            {title: 'Category', component: 'CategoryPage'},
             {title: 'Add', component: 'AddProductPage'},
             {title: 'Sell', component: 'SellProductPage'},
             {title: 'Update', component: 'UpdateProductPage'},
