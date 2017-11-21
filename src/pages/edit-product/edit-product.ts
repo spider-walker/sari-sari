@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {IonicPage, NavController, NavParams, AlertController} from 'ionic-angular';
 import {Validators, FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import {Database} from '../../providers/database/database';
-import {Product} from '../../models/models';
+import {Product, Category} from '../../models/models';
 @IonicPage()
 @Component({
     selector: 'page-edit-product',
@@ -12,7 +12,8 @@ export class EditProductPage {
     public productForm: FormGroup; // our form model
     product: Product;
     id: number;
-    source_page:string;
+    categorys: Array<Category>;
+    source_page: string;
     constructor(
         private _fb: FormBuilder,
         private database: Database,
@@ -20,9 +21,10 @@ export class EditProductPage {
         public alertCtrl: AlertController,
         public navParams: NavParams) {
         this.source_page = this.navParams.get('source_page');
-        if (this.source_page==null){
-            this.source_page='DetailProductPage';
+        if (this.source_page == null) {
+            this.source_page = 'DetailProductPage';
         }
+
 
 
     }
@@ -39,6 +41,7 @@ export class EditProductPage {
             date_created: ['',],
         });
         this.id = this.navParams.get('id');
+        this.database.getCategorys().then(categorys => this.categorys = categorys);
         this.database.getProductById(this.id).then((result) => {
             this.product = result;
             (<FormControl> this.productForm.controls['product_name']).setValue(this.product.product_name, {onlySelf: true});
@@ -108,8 +111,8 @@ export class EditProductPage {
         });
         alert.present();
     }
-     go_home() {
-         this.navCtrl.setRoot('HomePage');
+    go_home() {
+        this.navCtrl.setRoot('HomePage');
     }
 
 }

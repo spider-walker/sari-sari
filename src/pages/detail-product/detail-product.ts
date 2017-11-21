@@ -70,5 +70,8 @@ export class DetailProductPage {
     } go_home() {
          this.navCtrl.setRoot('HomePage');
     }
+    get_product_category(category_id:number){
+        
+    }
 
 }

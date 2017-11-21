@@ -8,27 +8,30 @@
 
         <ion-buttons end>
             <button ion-button (click)="go_home()">
-                <ion-icon name="arrow-round-back" style="color:white;text-align: right"></ion-icon>
+                    <ion-icon name="arrow-round-back" style="color:white;text-align: right"></ion-icon>
             </button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>
 <ion-content padding>
     <form [formGroup]="productForm" novalidate (ngSubmit)="save(productForm)">
-        <ion-list>  
+        <ion-list>            
+            <ion-item>
+                <ion-label>Category:</ion-label>
+                <ion-select formControlName="category_id" interface='popover'>
+                    <ion-option value="" selected>Select</ion-option>
+                    <ion-option *ngFor="let item of categorys" value="{{item.category_id}}" >{{item.category_name}}</ion-option>
+                </ion-select> 
+
+            </ion-item>
             <ion-item>
                 <ion-label>Product Name:</ion-label>
                 <ion-input type='text' formControlName="product_name"></ion-input>
             </ion-item>
             <ion-item>
-                <ion-label>Product ID:</ion-label>
-                <ion-input type='text' formControlName="product_id"></ion-input>
-                
-            </ion-item>
-            <ion-item>
                 <ion-label>Product Price:</ion-label>
                 <ion-input type='number' formControlName="product_price"></ion-input>
-               
+
             </ion-item>
             <ion-item>
                 <ion-label>Initial Stock:</ion-label>
@@ -37,7 +40,7 @@
             <ion-item>
                 <ion-label>Quantity:</ion-label>
                 <ion-input type='number' formControlName="quantity"></ion-input>
-                
+
             </ion-item>
             <ion-item>
                 <ion-label>Warning Point:</ion-label>
@@ -50,7 +53,7 @@
             <ion-item>
                 <ion-label>Date:</ion-label>
                 <ion-datetime  displayFormat="YYYY-MM-DD" templateType="popover" formControlName="date_created" ></ion-datetime>
-                
+
             </ion-item>
         </ion-list>
         <ion-list>

@@ -21,7 +21,7 @@ export class SellPage {
         public navCtrl: NavController,
         public alertCtrl: AlertController,
         public navParams: NavParams) {
-
+        
 
     }
 

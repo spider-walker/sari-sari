@@ -8,19 +8,22 @@
 
         <ion-buttons end>
             <button ion-button (click)="go_home()">
-                <ion-icon name="arrow-round-back" style="color:white;text-align: right"></ion-icon>
+                    <ion-icon name="arrow-round-back" style="color:white;text-align: right"></ion-icon>
             </button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>
 
 <ion-content padding>
+    <ion-fab right middle>
+        <button ion-fab color="danger" (click)="add_category()"><ion-icon name="add"></ion-icon></button>
+    </ion-fab>
     <ion-searchbar placeholder="Search category to view details" [(ngModel)]="search"  [showCancelButton]="shouldShowCancel"   (ionInput)="getItems($event)"  (ionCancel)="onCancel($event)" ></ion-searchbar>
     <ion-grid>
         <ion-row>
             <ion-col>Name</ion-col>
         </ion-row>
-        <ion-row *ngFor="let item of categorys" (click)="view_category(item.category_id)" style="border-top:1px #F1F1F1 solid;padding-top:2px">
+        <ion-row *ngFor="let item of categorys"   style="border-top:1px #F1F1F1 solid;padding-top:2px">
             <ion-col>{{item.category_name }}</ion-col> 
         </ion-row>
     </ion-grid>

@@ -8,7 +8,7 @@
 
         <ion-buttons end>
             <button ion-button (click)="go_home()">
-                <ion-icon name="arrow-round-back" style="color:white;text-align: right"></ion-icon>
+                    <ion-icon name="arrow-round-back" style="color:white;text-align: right"></ion-icon>
             </button>
         </ion-buttons>
     </ion-navbar>
@@ -17,6 +17,14 @@
 
 <ion-content padding>
     <ion-searchbar placeholder="Search product to view details" [(ngModel)]="search"  [showCancelButton]="shouldShowCancel"   (ionInput)="getItems($event)"  (ionCancel)="onCancel($event)" ></ion-searchbar>
+    <ion-item>
+        <ion-label>Category:</ion-label>
+        <ion-select [(ngModel)]="category_id" interface='popover' (ngModelChange)="search_products()">
+            <ion-option value="" selected>Select</ion-option>
+            <ion-option *ngFor="let item of categorys" value="{{item.category_id}}" >{{item.category_name}}</ion-option>
+        </ion-select> 
+
+    </ion-item> 
     <ion-grid>
         <ion-row>
             <ion-col>Product Name</ion-col>
@@ -27,6 +35,6 @@
             <ion-col>{{item.product_name }}</ion-col>
             <ion-col>{{item.quantity}}</ion-col>
             <ion-col>{{item.product_price}}</ion-col>
-         </ion-row>
+        </ion-row>
     </ion-grid>
 </ion-content>

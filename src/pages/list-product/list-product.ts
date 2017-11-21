@@ -29,6 +29,9 @@ export class ListProductPage {
     onCancel(ev: any) {
         console.log(this.search);
     }
+    go_home() {
+         this.navCtrl.setRoot('HomePage');
+    }
 
     search_products() {
         this.result_title = 'Searching.....';

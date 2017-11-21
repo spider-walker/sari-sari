@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {IonicPage, NavController, NavParams, AlertController} from 'ionic-angular';
 import {Validators, FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import {Database} from '../../providers/database/database';
-import {Product} from '../../models/models';
+import {Product, Category} from '../../models/models';
 @IonicPage()
 @Component({
     selector: 'page-add-product',
@@ -11,18 +11,20 @@ import {Product} from '../../models/models';
 export class AddProductPage {
     public productForm: FormGroup; // our form model
     product: Product;
+    categorys: Array<Category>;
     constructor(
         private _fb: FormBuilder,
         private database: Database,
         public navCtrl: NavController,
         public alertCtrl: AlertController,
         public navParams: NavParams) {
+        this.database.getCategorys().then(categorys => this.categorys = categorys);
     }
 
     ngOnInit(): void {
         this.productForm = this._fb.group({
             product_name: ['', [Validators.required, Validators.minLength(2)]],
-            category_id: ['', [Validators.required, Validators.minLength(2)]],
+            category_id: ['',],
             product_price: ['',],
             initial_stock: ['0',],
             quantity: ['0',],
@@ -76,7 +78,7 @@ export class AddProductPage {
         if (this.productForm.valid) {
             this.database.insertProduct(this.product).then((result) => {
                 self.showAlert("Success", "Product details have been saved: Name:" + self.product.product_name);
-                (<FormControl> this.productForm.controls['product_name']).setValue('', {onlySelf: true}); 
+                (<FormControl> this.productForm.controls['product_name']).setValue('', {onlySelf: true});
                 (<FormControl> this.productForm.controls['category_id']).setValue('', {onlySelf: true});
                 (<FormControl> this.productForm.controls['product_price']).setValue('', {onlySelf: true});
                 (<FormControl> this.productForm.controls['initial_stock']).setValue('', {onlySelf: true});
@@ -89,7 +91,7 @@ export class AddProductPage {
             }, (error) => {
                 console.log("ERROR: ", error);
             });
-        } 
+        }
 
     }
     public showAlert(title: string, messge: string) {
@@ -100,8 +102,8 @@ export class AddProductPage {
         });
         alert.present();
     }
-     go_home() {
-         this.navCtrl.setRoot('HomePage');
+    go_home() {
+        this.navCtrl.setRoot('HomePage');
     }
 
 }

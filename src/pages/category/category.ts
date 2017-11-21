@@ -1,65 +1,47 @@
 import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams, AlertController} from 'ionic-angular';
-import {Validators, FormControl, FormGroup, FormBuilder} from '@angular/forms';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
+
 import {Database} from '../../providers/database/database';
 import {Category} from '../../models/models';
+
 @IonicPage()
 @Component({
-  selector: 'page-category',
-  templateUrl: 'category.html',
+    selector: 'page-category',
+    templateUrl: 'category.html',
 })
 export class CategoryPage {
-    public categoryForm: FormGroup; // our form model
-    category: Category;
+    categorys: Array<Category>;
+    result_title: string;
+    search: string;
     constructor(
-        private _fb: FormBuilder,
-        private database: Database,
         public navCtrl: NavController,
-        public alertCtrl: AlertController,
+        private database: Database,
         public navParams: NavParams) {
-    }
 
+    }
     ngOnInit(): void {
-        this.categoryForm = this._fb.group({
-            category_name: ['', [Validators.required, Validators.minLength(2)]], 
-        });
+        this.search_categorys();
     }
-    ionViewDidLoad() {
-
+    go_home() {
+        this.navCtrl.setRoot('HomePage');
     }
-    public save() {
-        var self = this;
-        this.category = new Category;
-        this.category.category_name = this.categoryForm.controls['category_name'].value; 
-        if (!this.categoryForm.controls['category_name'].valid) {
-            self.showAlert("Please check", "Please enter category name!");
-            return;
-        }
-        
-        if (this.categoryForm.valid) {
-            this.database.insertCategory(this.category).then((result) => {
-                self.showAlert("Success", "Category details have been saved: Name:" + self.category.category_name);
-                (<FormControl> this.categoryForm.controls['category_name']).setValue('', {onlySelf: true});
-                (<FormControl> this.categoryForm.controls['category_id']).setValue('', {onlySelf: true});
-
-
-                this.navCtrl.push('DetailCategoryPage', {id: result})
-            }, (error) => {
-                console.log("ERROR: ", error);
-            });
-        } 
-
+    getItems(ev: any) {
+        this.search_categorys();
     }
-    public showAlert(title: string, messge: string) {
-        let alert = this.alertCtrl.create({
-            title: title,
-            subTitle: messge,
-            buttons: ['OK']
-        });
-        alert.present();
+    onCancel(ev: any) {
+        console.log(this.search);
     }
-     go_home() {
-         this.navCtrl.setRoot('HomePage');
+
+    search_categorys() {
+        this.result_title = 'Searching.....';
+        this.database.getCategorys().then(categorys => this.categorys = categorys);
+    }
+    view_category(id: any) {
+        this.navCtrl.push('DetailCategoryPage', {id: id})
+    }
+
+    add_category() {
+        this.navCtrl.push('AddCategoryPage')
     }
 
 }

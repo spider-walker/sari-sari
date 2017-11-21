@@ -16,15 +16,19 @@
 <ion-content padding>
     <form [formGroup]="productForm" novalidate (ngSubmit)="save(productForm)">
         <ion-list>  
+           <ion-item>
+                <ion-label>Category:</ion-label>
+                <ion-select formControlName="category_id" interface='popover'>
+                    <ion-option value="" selected>Select</ion-option>
+                    <ion-option *ngFor="let item of categorys" value="{{item.category_id}}" >{{item.category_name}}</ion-option>
+                </ion-select> 
+
+            </ion-item> 
             <ion-item>
                 <ion-label>Product Name:</ion-label>
                 <ion-input type='text' formControlName="product_name"></ion-input>
             </ion-item>
-            <ion-item>
-                <ion-label>Product ID:</ion-label>
-                <ion-input type='number' formControlName="product_id"></ion-input>
-                
-            </ion-item>
+             
             <ion-item>
                 <ion-label>Product Price:</ion-label>
                 <ion-input type='number' formControlName="product_price"></ion-input>
