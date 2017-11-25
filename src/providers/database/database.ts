@@ -23,7 +23,7 @@ export class Database {
         let version = 6;
 
         let db_version = "CREATE TABLE IF NOT EXISTS  " + TABLE_DB_VERSION + "(version_no INTEGER PRIMARY KEY ,txdate date) ";
-        this.dbPromise = SqlDatabase.open('SariSari.db', [db_version]);
+        this.dbPromise = SqlDatabase.open('Sari.db', [db_version]);
         this.dbPromise
             .then(db => db.execute("INSERT or IGNORE INTO " + TABLE_DB_VERSION + " (version_no,txdate ) VALUES (?,date('now') )",
                 [1]))
@@ -38,7 +38,7 @@ export class Database {
             + "category_name text"
             + ")";
 
-        this.dbPromise = SqlDatabase.open('SariSari.db', [createCategoryStatement]);
+        this.dbPromise = SqlDatabase.open('Sari.db', [createCategoryStatement]);
 
         let createProductStatement = "CREATE TABLE IF NOT EXISTS "
             + TABLE_PRODUCTS
@@ -52,7 +52,7 @@ export class Database {
             + "date_created text"
             + ")";
 
-        this.dbPromise = SqlDatabase.open('SariSari.db', [createProductStatement]);
+        this.dbPromise = SqlDatabase.open('Sari.db', [createProductStatement]);
         let insertProductTxStatement = "CREATE TABLE IF NOT EXISTS "
             + TABLE_PRODUCT_TX
             + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -62,7 +62,7 @@ export class Database {
             + "doctype text,"
             + "tx_date  text"
             + ")";
-        this.dbPromise = SqlDatabase.open('SariSari.db', [insertProductTxStatement]);
+        this.dbPromise = SqlDatabase.open('Sari.db', [insertProductTxStatement]);
 
         let add_category_id_to_products = "ALTER TABLE " + TABLE_PRODUCTS + " ADD COLUMN category_id number";
         try {
@@ -73,7 +73,7 @@ export class Database {
                     console.log("Db version " + p.version_no);
                     console.log("Next Db version " + version);
                     if (p.version_no != version) {
-                        SqlDatabase.open('SariSari.db', [add_category_id_to_products])
+                        SqlDatabase.open('Sari.db', [add_category_id_to_products])
                             .catch(e => {
                                 console.log(e);
                             });;
