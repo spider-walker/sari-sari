@@ -41,7 +41,7 @@ export class EditProductPage {
             date_created: ['',],
         });
         this.id = this.navParams.get('id');
-        this.database.getCategorys().then(categorys => this.categorys = categorys);
+        this.database.getCategorys('').then(categorys => this.categorys = categorys);
         this.database.getProductById(this.id).then((result) => {
             this.product = result;
             (<FormControl> this.productForm.controls['product_name']).setValue(this.product.product_name, {onlySelf: true});

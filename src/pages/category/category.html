@@ -19,12 +19,23 @@
         <button ion-fab color="danger" (click)="add_category()"><ion-icon name="add"></ion-icon></button>
     </ion-fab>
     <ion-searchbar placeholder="Search category to view details" [(ngModel)]="search"  [showCancelButton]="shouldShowCancel"   (ionInput)="getItems($event)"  (ionCancel)="onCancel($event)" ></ion-searchbar>
-    <ion-grid>
-        <ion-row>
-            <ion-col>Name</ion-col>
-        </ion-row>
-        <ion-row *ngFor="let item of categorys"   style="border-top:1px #F1F1F1 solid;padding-top:2px">
-            <ion-col>{{item.category_name }}</ion-col> 
-        </ion-row>
-    </ion-grid>
+    <ion-list *ngFor="let item of category">
+        <ion-list-header>
+            <b><u>{{item.category_name }}</u></b>
+        </ion-list-header>
+        <ion-item>
+            <ion-grid>
+                <ion-row>
+                    <ion-col>Product Name</ion-col>
+                    <ion-col>Quantity</ion-col>
+                    <ion-col>Product Price</ion-col>
+                </ion-row>
+                <ion-row *ngFor="let item of item?.products" (click)="view_product(item.id)" style="border-top:1px #F1F1F1 solid;padding-top:2px">
+                    <ion-col>{{item.product_name }}</ion-col>
+                    <ion-col>{{item.quantity}}</ion-col>
+                    <ion-col>{{item.product_price}}</ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-item>        
+    </ion-list>
 </ion-content>

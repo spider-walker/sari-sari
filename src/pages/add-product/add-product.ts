@@ -18,7 +18,7 @@ export class AddProductPage {
         public navCtrl: NavController,
         public alertCtrl: AlertController,
         public navParams: NavParams) {
-        this.database.getCategorys().then(categorys => this.categorys = categorys);
+        this.database.getCategorys('').then(categorys => this.categorys = categorys);
     }
 
     ngOnInit(): void {

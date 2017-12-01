@@ -70,6 +70,9 @@ export class DetailProductPage {
     } go_home() {
          this.navCtrl.setRoot('HomePage');
     }
+    sell_product(id: any) {
+        this.navCtrl.push('SellPage', {id: this.product.id})
+    }
     get_product_category(category_id:number){
         
     }

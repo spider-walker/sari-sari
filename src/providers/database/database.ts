@@ -150,10 +150,16 @@ export class Database {
             });
 
     }
-    public getCategorys() {
+    public getCategorys(search: string) {
+        let sql = "SELECT * FROM " + TABLE_CATEGORY
+        if (search == undefined || search.length == 0 || search == null) {
+
+        } else {
+            sql += " where (category_name like '%" + search + "%' )";
+        }
         let categorys = Array<Category>();
         return this.dbPromise
-            .then(db => db.execute("SELECT * FROM " + TABLE_CATEGORY))
+            .then(db => db.execute(sql))
             .then(resultSet => {
                 if (resultSet.rows.length > 0) {
                     for (let i = 0; i < resultSet.rows.length; i++) {
@@ -202,16 +208,18 @@ export class Database {
 
     public getSearchProducts(search: string): Promise<Product[]> {
         let products = Array<Product>();
-        let sql = "SELECT " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
+        let sql = "SELECT " + TABLE_CATEGORY + ".category_name as category_name," + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
             + TABLE_PRODUCTS
+            + " JOIN " + TABLE_CATEGORY + " ON " + TABLE_CATEGORY + ".category_id = " + TABLE_PRODUCTS + ".category_id  "
             + " LEFT JOIN " + TABLE_PRODUCT_TX + " ON " + TABLE_PRODUCT_TX + ".pid = " + TABLE_PRODUCTS + ".id ";
         if (search == undefined || search.length == 0 || search == null) {
 
         } else {
-            sql += " where (product_name like '%" + search + "%' or category_id like '%" + search + "%')";
+            sql += " where (product_name like '%" + search + "%' or " + TABLE_PRODUCTS + ".category_id like '%" + search + "%')";
         }
 
-        sql += " group by " + TABLE_PRODUCTS + ".id, product_name,category_id," + TABLE_PRODUCTS + ".product_price,initial_stock," + TABLE_PRODUCTS + ".quantity,warning_point,description,date_created"
+        sql += " group by " + TABLE_PRODUCTS + ".id, product_name," + TABLE_PRODUCTS + ".category_id," + TABLE_PRODUCTS + ".product_price,initial_stock," + TABLE_PRODUCTS + ".quantity,warning_point,description,date_created"
+        sql += " order by " + TABLE_PRODUCTS + ".category_id,product_name"
         return this.dbPromise
             .then(db => db.execute(sql))
             .then(resultSet => {
@@ -222,6 +230,7 @@ export class Database {
                         product.id = p.id;
                         product.product_name = p.product_name;
                         product.category_id = p.category_id;
+                        product.category_name = p.category_name;
                         product.product_price = p.product_price;
                         product.initial_stock = p.initial_stock;
                         product.quantity = p.quantity;
@@ -252,7 +261,7 @@ export class Database {
         if (category_id == undefined || category_id == 0 || category_id == null) {
 
         } else {
-            sql += " and (category_id='"+category_id+"')";
+            sql += " and (category_id='" + category_id + "')";
         }
 
         sql += " group by " + TABLE_PRODUCTS + ".id, product_name,category_id," + TABLE_PRODUCTS + ".product_price,initial_stock," + TABLE_PRODUCTS + ".quantity,warning_point,description,date_created"

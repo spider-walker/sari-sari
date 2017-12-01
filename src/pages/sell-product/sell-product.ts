@@ -20,7 +20,7 @@ export class SellProductPage {
         private database: Database,
         public navParams: NavParams) {
         this.fetch_products();
-        this.database.getCategorys().then(categorys => this.categorys = categorys);
+        this.database.getCategorys('').then(categorys => this.categorys = categorys);
     }
 
     getItems(ev: any) {

@@ -16,6 +16,7 @@ export class Product {
 export class Category {
     category_id: number;
     category_name: string;
+    products: Array<Product>;
 }
 export class ProductTx {
     id: number;
