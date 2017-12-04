@@ -1,18 +1,26 @@
-<!--
-  Generated template for the ReportsPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
+    <ion-navbar color="danger">
+        <button ion-button menuToggle start>
+            <ion-icon name="menu"></ion-icon>
+        </button>
 
-  <ion-navbar>
-    <ion-title>reports</ion-title>
-  </ion-navbar>
+        <ion-title>Reports</ion-title>
 
+        <ion-buttons end>
+            <button ion-button (click)="go_home()">
+                <ion-icon name="arrow-round-back" style="color:white;text-align: right"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
 </ion-header>
 
 
 <ion-content padding>
+    <h3 text-center>Sari-Sari Store Stock Management</h3>
 
+    <p>
+
+    </p>
+
+    <button color="primary" ion-item *ngFor="let p of menu_pages" (click)="openPage(p)" text-center> {{p.title}} </button>
 </ion-content>

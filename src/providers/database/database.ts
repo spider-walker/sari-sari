@@ -353,5 +353,51 @@ export class Database {
             });
 
     }
+    public getReportProductTxByCategory(from_date: string, to_date:string,category_id: number,product_id:number): Promise<Product[]> {
+        let products = Array<Product>();
+        let sql = "SELECT " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
+            + TABLE_PRODUCTS
+            + " LEFT JOIN " + TABLE_PRODUCT_TX + " ON " + TABLE_PRODUCT_TX + ".pid = " + TABLE_PRODUCTS + ".id ";
+        sql += " where 1=1 and txdate between '"+from_date+"'  and '"+to_date+"'";
+        
+        if (category_id == undefined || category_id == 0 || category_id == null) {
+
+        } else {
+            sql += " and (category_id='" + category_id + "')";
+        }
+        if (product_id == undefined || product_id == 0 || product_id == null) {
+
+        } else {
+            sql += " and (product_id='" + product_id + "')";
+        }
+
+        sql += " group by " + TABLE_PRODUCT_TX + ".txdate," + TABLE_PRODUCTS + ".id, product_name,category_id," + TABLE_PRODUCTS + ".product_price,initial_stock," + TABLE_PRODUCTS + ".quantity,warning_point,description,date_created"
+        return this.dbPromise
+            .then(db => db.execute(sql))
+            .then(resultSet => {
+                if (resultSet.rows.length > 0) {
+                    for (let i = 0; i < resultSet.rows.length; i++) {
+                        var p = resultSet.rows.item(i);
+                        let product = new Product();
+                        product.id = p.id;
+                        product.product_name = p.product_name;
+                        product.category_id = p.category_id;
+                        product.product_price = p.product_price;
+                        product.initial_stock = p.initial_stock;
+                        product.quantity = p.quantity;
+                        product.quantity_sold = p.quantity_sold;
+                        product.warning_point = p.warning_point;
+                        product.description = p.description;
+                        product.date_created = p.date_created;
+                        product.txdate=p.txdate;
+                        products.push(product)
+                    }
+                }
+                return Promise.resolve(products);;
+            }).catch(error => {
+                console.log(error);
+            });
+
+    }
 
 }
