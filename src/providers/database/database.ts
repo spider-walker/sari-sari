@@ -355,10 +355,10 @@ export class Database {
     }
     public getReportProductTxByCategory(from_date: string, to_date:string,category_id: number,product_id:number): Promise<Product[]> {
         let products = Array<Product>();
-        let sql = "SELECT " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
+        let sql = "SELECT "+TABLE_PRODUCT_TX + ".tx_date as tx_date, "+ TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
             + TABLE_PRODUCTS
             + " LEFT JOIN " + TABLE_PRODUCT_TX + " ON " + TABLE_PRODUCT_TX + ".pid = " + TABLE_PRODUCTS + ".id ";
-        sql += " where 1=1 and txdate between '"+from_date+"'  and '"+to_date+"'";
+        sql += " where 1=1 and tx_date between '"+from_date+"'  and '"+to_date+"'";
         
         if (category_id == undefined || category_id == 0 || category_id == null) {
 
@@ -371,7 +371,7 @@ export class Database {
             sql += " and (product_id='" + product_id + "')";
         }
 
-        sql += " group by " + TABLE_PRODUCT_TX + ".txdate," + TABLE_PRODUCTS + ".id, product_name,category_id," + TABLE_PRODUCTS + ".product_price,initial_stock," + TABLE_PRODUCTS + ".quantity,warning_point,description,date_created"
+        sql += " group by " + TABLE_PRODUCT_TX + ".tx_date," + TABLE_PRODUCTS + ".id, product_name,category_id," + TABLE_PRODUCTS + ".product_price,initial_stock," + TABLE_PRODUCTS + ".quantity,warning_point,description,date_created"
         return this.dbPromise
             .then(db => db.execute(sql))
             .then(resultSet => {
@@ -389,7 +389,7 @@ export class Database {
                         product.warning_point = p.warning_point;
                         product.description = p.description;
                         product.date_created = p.date_created;
-                        product.txdate=p.txdate;
+                        product.txdate=p.tx_date;
                         products.push(product)
                     }
                 }

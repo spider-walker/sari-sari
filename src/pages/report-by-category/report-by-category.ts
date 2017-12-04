@@ -34,6 +34,18 @@ export class ReportByCategoryPage {
         let from_date = this.productForm.controls['from_date'].value;
         let to_date = this.productForm.controls['to_date'].value;
         let category_id = this.productForm.controls['category_id'].value;
+        if (from_date == ''){
+            this.showAlert('Please check','From date is required');
+            return;
+        }
+        if (to_date == ''){
+            this.showAlert('Please check','To date is required');
+            return;
+        }
+        if (category_id == ''){
+            this.showAlert('Please check','Categeory is required');
+            return;
+        }
         this.database.getReportProductTxByCategory(from_date, to_date, category_id,0).then((result) => {
           this.products = result;
         }, (error) => {
@@ -49,8 +61,11 @@ export class ReportByCategoryPage {
         });
         alert.present();
     }
+    make_date(date:string){
+        return date.substring(0,10);
+    }
     go_home() {
-        this.navCtrl.setRoot('HomePage');
+        this.navCtrl.setRoot('ReportsPage');
     }
 
 }
