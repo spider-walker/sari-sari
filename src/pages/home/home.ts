@@ -16,6 +16,7 @@ export class HomePage {
             {title: 'Update', component: 'UpdateProductPage'},
             {title: 'Inventory List', component: 'ListProductPage'},
             {title: 'Critical Products', component: 'CriticalProductPage'},
+            {title: 'Reports', component: 'ReportsPage'},
             {title: 'About', component: 'AboutPage'},
         ];
     }
