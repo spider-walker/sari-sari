@@ -42,6 +42,7 @@
             <ion-col>Qty</ion-col>
             <ion-col>Price</ion-col>
             <ion-col>Qty Sold</ion-col>
+            <ion-col>Amount</ion-col>
         </ion-row>
         <ion-row *ngFor="let item of products" (click)="view_product(item.id)" style="border-top:1px #F1F1F1 solid;padding-top:2px">
             <ion-col>{{make_date(item.txdate)}}</ion-col>
@@ -49,6 +50,7 @@
             <ion-col>{{item.quantity}}</ion-col>
             <ion-col>{{item.product_price}}</ion-col>
             <ion-col>{{item.quantity_sold}}</ion-col>
+            <ion-col>{{item.quantity_sold*item.product_price}}</ion-col>
         </ion-row>
     </ion-grid>
 </ion-content>
