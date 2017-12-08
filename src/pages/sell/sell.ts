@@ -75,8 +75,9 @@ export class SellPage {
                 self.showAlert("Please check", "You don't have enough stock to sell " + this.productTx.quantity + "!");
                 return;
             }
+            this.product.quantity = this.product.quantity - this.productTx.quantity;
             this.database.updateProduct(this.product).then((result) => {
-                this.product.quantity = this.product.quantity - this.productTx.quantity;
+               
             }, (error) => {
                 console.log("ERROR: ", error);
             });
