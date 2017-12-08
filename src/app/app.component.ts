@@ -28,7 +28,8 @@ export class MyApp {
             {title: 'Update', component: 'UpdateProductPage'},
             {title: 'Inventory List', component: 'ListProductPage'},
             {title: 'Critical Products', component: 'CriticalProductPage'},
-            {title: 'About', component: 'AboutPage'}
+            {title: 'Reports', component: 'ReportsPage'},
+            {title: 'About', component: 'AboutPage'},
         ];
 
     }
@@ -37,7 +38,7 @@ export class MyApp {
         this.platform.ready().then(() => {
             this.statusBar.styleDefault();
             setTimeout(() => {
-               this.splashScreen.hide();
+                this.splashScreen.hide();
             }, 5000);;
 
             this.database.opendb(2);
@@ -47,6 +48,6 @@ export class MyApp {
     openPage(page) {
         this.nav.setRoot(page.component);
     }
-   
-    
+
+
 }
