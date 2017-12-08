@@ -12,7 +12,6 @@ export class ReportsPage {
         this.menu_pages = [
             {title: 'By Category', component: 'ReportByCategoryPage'},
             {title: 'By Date', component: 'ReportByDatePage'},
-            {title: 'By Product', component: 'ReportByProductPage'}
         ];
     }
 

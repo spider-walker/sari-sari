@@ -70,12 +70,13 @@ export class SellPage {
         }
 
         if (this.productForm.valid) {
-            this.product.quantity = this.product.quantity - this.productTx.quantity;
-            if (this.product.quantity < 0) {
+            
+            if (this.product.quantity - this.productTx.quantity < 0) {
                 self.showAlert("Please check", "You don't have enough stock to sell " + this.productTx.quantity + "!");
                 return;
             }
             this.database.updateProduct(this.product).then((result) => {
+                this.product.quantity = this.product.quantity - this.productTx.quantity;
             }, (error) => {
                 console.log("ERROR: ", error);
             });
