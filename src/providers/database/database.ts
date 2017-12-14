@@ -353,13 +353,13 @@ export class Database {
             });
 
     }
-    public getReportProductTxByCategory(from_date: string, to_date:string,category_id: number,product_id:number): Promise<Product[]> {
+    public getReportProductTxByCategory(from_date: string, to_date: string, category_id: number, product_id: number): Promise<Product[]> {
         let products = Array<Product>();
-        let sql = "SELECT "+TABLE_PRODUCT_TX + ".tx_date as tx_date, "+ TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
+        let sql = "SELECT " + TABLE_PRODUCT_TX + ".tx_date as tx_date, " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
             + TABLE_PRODUCTS
             + " LEFT JOIN " + TABLE_PRODUCT_TX + " ON " + TABLE_PRODUCT_TX + ".pid = " + TABLE_PRODUCTS + ".id ";
-        sql += " where 1=1 and tx_date between '"+from_date+"'  and '"+to_date+"'";
-        
+        sql += " where 1=1 and tx_date between '" + from_date + "'  and '" + to_date + "'";
+
         if (category_id == undefined || category_id == 0 || category_id == null) {
 
         } else {
@@ -389,7 +389,7 @@ export class Database {
                         product.warning_point = p.warning_point;
                         product.description = p.description;
                         product.date_created = p.date_created;
-                        product.txdate=p.tx_date;
+                        product.txdate = p.tx_date;
                         products.push(product)
                     }
                 }
@@ -399,5 +399,78 @@ export class Database {
             });
 
     }
+    public getReportProductTxByMonth(): Promise<Product[]> {
+        let products = Array<Product>();
+        let sql = "SELECT strftime('%Y', " + TABLE_PRODUCT_TX + ".tx_date) as valYear, strftime('%m', " + TABLE_PRODUCT_TX + ".tx_date) as valMonth, " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
+            + TABLE_PRODUCTS
+            + " LEFT JOIN " + TABLE_PRODUCT_TX + " ON " + TABLE_PRODUCT_TX + ".pid = " + TABLE_PRODUCTS + ".id "
+            + " group by strftime('%Y', " + TABLE_PRODUCT_TX + ".tx_date), strftime('%m', " + TABLE_PRODUCT_TX + ".tx_date)," + TABLE_PRODUCTS + ".id"
+        console.log(sql);
+        return this.dbPromise
+            .then(db => db.execute(sql))
+            .then(resultSet => {
+                if (resultSet.rows.length > 0) {
+                    for (let i = 0; i < resultSet.rows.length; i++) {
+                        var p = resultSet.rows.item(i);
+                        let product = new Product();
+                        product.id = p.id;
+                        product.product_name = p.product_name;
+                        product.category_id = p.category_id;
+                        product.product_price = p.product_price;
+                        product.initial_stock = p.initial_stock;
+                        product.quantity = p.quantity;
+                        product.quantity_sold = p.quantity_sold;
+                        product.warning_point = p.warning_point;
+                        product.description = p.description;
+                        product.date_created = p.date_created;
+                        product.txdate = p.valMonth + "-" + p.valYear;
+                        products.push(product)
+                    }
+                }
+                return Promise.resolve(products);;
+            }).catch(error => {
+                console.log(error);
+            });
+
+    }
+    public getReportProductTxByWeek(): Promise<Product[]> {
+        let products = Array<Product>();
+        let sql = "SELECT strftime('%W', " + TABLE_PRODUCT_TX + ".tx_date, 'weekday 1') WeekNumber," +
+            "max(date(" + TABLE_PRODUCT_TX + ".tx_date, 'weekday 1')) WeekStart," +
+            "max(date(" + TABLE_PRODUCT_TX + ".tx_date, 'weekday 1', '+6 day')) WeekEnd, " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
+            + TABLE_PRODUCTS
+            + " LEFT JOIN " + TABLE_PRODUCT_TX + " ON " + TABLE_PRODUCT_TX + ".pid = " + TABLE_PRODUCTS + ".id "
+            + " group by WeekNumber," + TABLE_PRODUCTS + ".id"
+            + " order by WeekNumber," + TABLE_PRODUCTS + ".id";
+        console.log(sql);
+        
+        return this.dbPromise
+            .then(db => db.execute(sql))
+            .then(resultSet => {
+                if (resultSet.rows.length > 0) {
+                    for (let i = 0; i < resultSet.rows.length; i++) {
+                        var p = resultSet.rows.item(i);
+                        let product = new Product();
+                        product.id = p.id;
+                        product.product_name = p.product_name;
+                        product.category_id = p.category_id;
+                        product.product_price = p.product_price;
+                        product.initial_stock = p.initial_stock;
+                        product.quantity = p.quantity;
+                        product.quantity_sold = p.quantity_sold;
+                        product.warning_point = p.warning_point;
+                        product.description = p.description;
+                        product.date_created = p.date_created;
+                        product.txdate = p.WeekNumber;
+                        products.push(product)
+                    }
+                }
+                return Promise.resolve(products);;
+            }).catch(error => {
+                console.log(error);
+            });
+
+    }
+
 
 }
