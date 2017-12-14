@@ -1,0 +1,63 @@
+<ion-header>
+    <ion-navbar color="danger">
+        <button ion-button menuToggle start>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+
+        <ion-title>Monthly Report</ion-title>
+
+        <ion-buttons end>
+            <button ion-button (click)="go_home()">
+                    <ion-icon name="arrow-round-back" style="color:white;text-align: right"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+<ion-content padding>
+    <form [formGroup]="productForm" novalidate (ngSubmit)="save(productForm)">
+        <ion-list>  
+            <ion-item>
+                <ion-label>Product:</ion-label>
+                <ion-select formControlName="category_id" interface='popover'>
+                    <ion-option *ngFor="let item of categorys" value="{{item.product_id}}" >{{item.product_name}}</ion-option>
+                </ion-select> 
+
+            </ion-item>
+            <ion-item>
+                <ion-label>From:</ion-label>
+                <ion-datetime  displayFormat="YYYY-MM-DD" templateType="popover" formControlName="from_date" ></ion-datetime>
+            </ion-item>
+            <ion-item>
+                <ion-label>To:</ion-label>
+                <ion-datetime  displayFormat="YYYY-MM-DD" templateType="popover" formControlName="to_date" ></ion-datetime>
+            </ion-item>
+        </ion-list>
+        <ion-list>
+            <ion-item>
+                <button  ion-button block color="primary" type="submit" >View</button>
+
+            </ion-item>
+        </ion-list>
+
+
+    </form>
+    <hr style="border: 1px solid #000">
+    <ion-grid>
+        <ion-row>
+            <ion-col>Date</ion-col>
+            <ion-col>Name</ion-col>
+            <ion-col>Qty</ion-col>
+            <ion-col>Price</ion-col>
+            <ion-col>Qty Sold</ion-col>
+            <ion-col>Amount</ion-col>
+        </ion-row>
+        <ion-row *ngFor="let item of products" (click)="view_product(item.id)" style="border-top:1px #F1F1F1 solid;padding-top:2px">
+            <ion-col>{{make_date(item.txdate)}}</ion-col>
+            <ion-col>{{item.product_name }}</ion-col>
+            <ion-col>{{item.quantity}}</ion-col>
+            <ion-col>{{item.product_price}}</ion-col>
+            <ion-col>{{item.quantity_sold}}</ion-col>
+            <ion-col>{{item.quantity_sold*item.product_price}}</ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
