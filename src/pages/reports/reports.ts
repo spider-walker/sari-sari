@@ -10,6 +10,8 @@ export class ReportsPage {
     menu_pages: Array<{title: string, component: any}>;
     constructor(public navCtrl: NavController, public navParams: NavParams) {
         this.menu_pages = [
+             {title: 'By Category', component: 'ReportByCategoryPage'},
+            {title: 'By Date', component: 'ReportByDatePage'},       
             {title: 'Weekly Report', component: 'WeeklyReportPage'},
             {title: 'Monthly Report', component: 'MonthlyReportPage'},
         ];
