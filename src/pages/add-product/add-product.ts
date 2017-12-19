@@ -25,7 +25,8 @@ export class AddProductPage {
         this.productForm = this._fb.group({
             product_name: ['', [Validators.required, Validators.minLength(2)]],
             category_id: ['',],
-            product_price: ['',],
+            product_price: [0,],
+            market_price: [0,],
             initial_stock: ['0',],
             quantity: ['0',],
             warning_point: ['',],
@@ -42,6 +43,7 @@ export class AddProductPage {
         this.product.product_name = this.productForm.controls['product_name'].value;
         this.product.category_id = this.productForm.controls['category_id'].value;
         this.product.product_price = this.productForm.controls['product_price'].value;
+        this.product.market_price = this.productForm.controls['market_price'].value;
         this.product.initial_stock = this.productForm.controls['initial_stock'].value;
         this.product.quantity = this.productForm.controls['quantity'].value;
         this.product.warning_point = this.productForm.controls['warning_point'].value;
@@ -67,6 +69,10 @@ export class AddProductPage {
             self.showAlert("Please check", "Product Price  must be a number!");
             return;
         }
+        if (isNaN(this.product.market_price)) {
+            self.showAlert("Please check", "Market Price  must be a number!");
+            return;
+        }
         if (isNaN(this.product.initial_stock)) {
             self.showAlert("Please check", "Initial Stock  must be a number!");
             return;
@@ -81,13 +87,14 @@ export class AddProductPage {
                 (<FormControl> this.productForm.controls['product_name']).setValue('', {onlySelf: true});
                 (<FormControl> this.productForm.controls['category_id']).setValue('', {onlySelf: true});
                 (<FormControl> this.productForm.controls['product_price']).setValue('', {onlySelf: true});
+                (<FormControl> this.productForm.controls['market_price']).setValue(0, {onlySelf: true});
                 (<FormControl> this.productForm.controls['initial_stock']).setValue('', {onlySelf: true});
                 (<FormControl> this.productForm.controls['quantity']).setValue('0', {onlySelf: true});
                 (<FormControl> this.productForm.controls['warning_point']).setValue('0', {onlySelf: true});
                 (<FormControl> this.productForm.controls['description']).setValue('0', {onlySelf: true});
 
 
-                this.navCtrl.push('DetailProductPage', {id: result})
+               // this.navCtrl.push('DetailProductPage', {id: result})
             }, (error) => {
                 console.log("ERROR: ", error);
             });

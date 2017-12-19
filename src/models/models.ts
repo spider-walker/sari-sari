@@ -10,6 +10,8 @@ export class Product {
     warning_point: number;
     description: string;
     date_created: string;
+    market_price: number;
+    total:number;
     txdate: string;
 
 
@@ -25,6 +27,8 @@ export class ProductTx {
     doctype: string;
     quantity: number;
     product_price: number;
+    market_price: number;
+    total: number;
     tx_date: string;
 
 }

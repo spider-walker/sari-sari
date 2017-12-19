@@ -34,6 +34,7 @@ export class EditProductPage {
             product_name: ['', [Validators.required, Validators.minLength(2)]],
             category_id: ['', [Validators.required, Validators.minLength(2)]],
             product_price: ['',],
+            market_price: ['',],
             initial_stock: ['',],
             quantity: ['',],
             warning_point: ['',],
@@ -47,6 +48,7 @@ export class EditProductPage {
             (<FormControl> this.productForm.controls['product_name']).setValue(this.product.product_name, {onlySelf: true});
             (<FormControl> this.productForm.controls['category_id']).setValue(this.product.category_id, {onlySelf: true});
             (<FormControl> this.productForm.controls['product_price']).setValue(this.product.product_price, {onlySelf: true});
+            (<FormControl> this.productForm.controls['market_price']).setValue(this.product.market_price, {onlySelf: true});
             (<FormControl> this.productForm.controls['initial_stock']).setValue(this.product.initial_stock, {onlySelf: true});
             (<FormControl> this.productForm.controls['quantity']).setValue(this.product.quantity, {onlySelf: true});
             (<FormControl> this.productForm.controls['warning_point']).setValue(this.product.warning_point, {onlySelf: true});
@@ -63,6 +65,7 @@ export class EditProductPage {
         this.product.product_name = this.productForm.controls['product_name'].value;
         this.product.category_id = this.productForm.controls['category_id'].value;
         this.product.product_price = this.productForm.controls['product_price'].value;
+        this.product.market_price = this.productForm.controls['market_price'].value;
         this.product.initial_stock = this.productForm.controls['initial_stock'].value;
         this.product.quantity = this.productForm.controls['quantity'].value;
         this.product.warning_point = this.productForm.controls['warning_point'].value;
@@ -85,6 +88,10 @@ export class EditProductPage {
         }
         if (isNaN(this.product.product_price)) {
             self.showAlert("Please check", "Product Price  must be a number!");
+            return;
+        }
+        if (isNaN(this.product.market_price)) {
+            self.showAlert("Please check", "Market Price  must be a number!");
             return;
         }
         if (isNaN(this.product.initial_stock)) {

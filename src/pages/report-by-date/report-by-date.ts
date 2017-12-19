@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {IonicPage, NavController, NavParams, AlertController} from 'ionic-angular';
-import {Validators, FormControl, FormGroup, FormBuilder} from '@angular/forms';
+import {FormGroup, FormBuilder} from '@angular/forms';
 import {Database} from '../../providers/database/database';
 import {Product, Category} from '../../models/models';
 @IonicPage()
@@ -12,6 +12,8 @@ export class ReportByDatePage {
     public productForm: FormGroup; // our form model
     categorys: Array<Category>;
     products: Array<Product>;
+    over_all_profit: number=0;
+    over_all_market: number=0;
     constructor(
         private _fb: FormBuilder,
         private database: Database,
@@ -43,6 +45,12 @@ export class ReportByDatePage {
         }
         this.database.getReportProductTxByCategory(from_date, to_date, 0, 0).then((result) => {
             this.products = result;
+            this.over_all_profit=0;
+            this.over_all_market=0;
+            for (let item of this.products) {                
+                this.over_all_profit+=item.quantity_sold*item.product_price-item.quantity_sold*item.market_price;
+                this.over_all_profit+=item.quantity_sold*item.market_price;
+            }
         }, (error) => {
             console.log("ERROR: ", error);
         });

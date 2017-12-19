@@ -20,7 +20,7 @@ export class Database {
         });
     }
     public opendb(id: any) {
-        let version = 6;
+        let version = 11;
 
         let db_version = "CREATE TABLE IF NOT EXISTS  " + TABLE_DB_VERSION + "(version_no INTEGER PRIMARY KEY ,txdate date) ";
         this.dbPromise = SqlDatabase.open('Sari.db', [db_version]);
@@ -45,6 +45,7 @@ export class Database {
             + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "product_name text,"
             + "product_price  number,"
+            + "market_price  number,"
             + "initial_stock  number,"
             + "quantity  number,"
             + "warning_point  number,"
@@ -58,13 +59,17 @@ export class Database {
             + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "pid  number,"
             + "product_price  number,"
+            + "market_price  number,"
             + "quantity  number,"
             + "doctype text,"
             + "tx_date  text"
             + ")";
         this.dbPromise = SqlDatabase.open('Sari.db', [insertProductTxStatement]);
 
-        let add_category_id_to_products = "ALTER TABLE " + TABLE_PRODUCTS + " ADD COLUMN category_id number";
+        let add_category_id_to_products_1 = "ALTER TABLE " + TABLE_PRODUCTS + " ADD COLUMN market_price number";
+        let add_category_id_to_products_2 = "ALTER TABLE " + TABLE_PRODUCT_TX + " ADD COLUMN market_price number";
+        let add_category_id_to_products_3 = "update " + TABLE_PRODUCT_TX + " set market_price=0 where  market_price=''|| market_price=null || market_price='undefined'";
+        let add_category_id_to_products_4 = "update " + TABLE_PRODUCTS + " set market_price=0 where  market_price='' || market_price=null || market_price='undefined'";
         try {
             this.dbPromise
                 .then(db => db.execute("select version_no from db_version order by version_no desc limit 1"))
@@ -73,7 +78,19 @@ export class Database {
                     console.log("Db version " + p.version_no);
                     console.log("Next Db version " + version);
                     if (p.version_no != version) {
-                        SqlDatabase.open('Sari.db', [add_category_id_to_products])
+                        SqlDatabase.open('Sari.db', [add_category_id_to_products_1])
+                            .catch(e => {
+                                console.log(e);
+                            });;
+                        SqlDatabase.open('Sari.db', [add_category_id_to_products_2])
+                            .catch(e => {
+                                console.log(e);
+                            });;
+                        SqlDatabase.open('Sari.db', [add_category_id_to_products_3])
+                            .catch(e => {
+                                console.log(e);
+                            });;
+                        SqlDatabase.open('Sari.db', [add_category_id_to_products_4])
                             .catch(e => {
                                 console.log(e);
                             });;
@@ -93,7 +110,14 @@ export class Database {
             }).catch(e => {
                 console.log(e);
             });
-
+        this.dbPromise
+            .then(db => db.execute("update " + TABLE_DB_VERSION + " set version_no=?,txdate=date('now')",
+                [version]))
+            .then(data => {
+                console.log(data.insertId);
+            }).catch(e => {
+                console.log(e);
+            });
         console.log("Starting db" + id);
     }
     public getProducts() {
@@ -187,6 +211,8 @@ export class Database {
                     product.category_name = p.category_name;
                     product.category_id = p.category_id;
                     product.product_price = p.product_price;
+                    product.market_price = p.market_price;
+                    console.log(product.market_price)
                     product.initial_stock = p.initial_stock;
                     product.quantity = p.quantity;
                     product.warning_point = p.warning_point;
@@ -208,7 +234,10 @@ export class Database {
 
     public getSearchProducts(search: string): Promise<Product[]> {
         let products = Array<Product>();
-        let sql = "SELECT " + TABLE_CATEGORY + ".category_name as category_name," + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
+        let sql = "SELECT " + TABLE_CATEGORY + ".category_name as category_name," + TABLE_PRODUCT_TX + ".market_price as market_price,"
+            + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold ,"
+            + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity*" + TABLE_PRODUCT_TX + ".market_price) as total "
+            + " FROM "
             + TABLE_PRODUCTS
             + " JOIN " + TABLE_CATEGORY + " ON " + TABLE_CATEGORY + ".category_id = " + TABLE_PRODUCTS + ".category_id  "
             + " LEFT JOIN " + TABLE_PRODUCT_TX + " ON " + TABLE_PRODUCT_TX + ".pid = " + TABLE_PRODUCTS + ".id ";
@@ -232,8 +261,10 @@ export class Database {
                         product.category_id = p.category_id;
                         product.category_name = p.category_name;
                         product.product_price = p.product_price;
+                        product.market_price = p.market_price;
                         product.initial_stock = p.initial_stock;
                         product.quantity = p.quantity;
+                        product.total = p.total;
                         product.quantity_sold = p.quantity_sold;
                         product.warning_point = p.warning_point;
                         product.description = p.description;
@@ -293,23 +324,23 @@ export class Database {
     }
     public insertProduct(product: Product) {
         return this.dbPromise
-            .then(db => db.execute("INSERT or IGNORE INTO " + TABLE_PRODUCTS + " (product_name,category_id,product_price,initial_stock,quantity,warning_point,description,date_created) VALUES (?, ?,?,?,?, ?,?,?)",
-                [product.product_name, product.category_id, product.product_price, product.initial_stock, product.quantity, product.warning_point, product.description, product.date_created]))
+            .then(db => db.execute("INSERT or IGNORE INTO " + TABLE_PRODUCTS + " (product_name,category_id,product_price,initial_stock,quantity,warning_point,description,date_created,market_price) VALUES (?, ?,?,?,?, ?,?,?,?)",
+                [product.product_name, product.category_id, product.product_price, product.initial_stock, product.quantity, product.warning_point, product.description, product.date_created, product.market_price]))
             .then(data => {
                 return data.insertId;
             });
     }
     public insertProductTx(product: ProductTx) {
         return this.dbPromise
-            .then(db => db.execute("INSERT or IGNORE INTO " + TABLE_PRODUCT_TX + " (pid, doctype, quantity,  product_price,tx_date) VALUES (?, ?,?,?,?)",
-                [product.pid, product.doctype, product.quantity, product.product_price, product.tx_date]))
+            .then(db => db.execute("INSERT or IGNORE INTO " + TABLE_PRODUCT_TX + " (pid, doctype, quantity,  product_price,tx_date,market_price) VALUES (?, ?,?,?,?,?)",
+                [product.pid, product.doctype, product.quantity, product.product_price, product.tx_date, product.market_price]))
             .then(data => {
                 return data.insertId;
             });
     }
     public updateProduct(product: Product) {
         return this.dbPromise
-            .then(db => db.execute("update " + TABLE_PRODUCTS + " set product_name=?,category_id=?,product_price=?,initial_stock=?,quantity=?,warning_point=?,description=?,date_created=? where id=?", [product.product_name, product.category_id, product.product_price, product.initial_stock, product.quantity, product.warning_point, product.description, product.date_created, product.id]))
+            .then(db => db.execute("update " + TABLE_PRODUCTS + " set product_name=?,category_id=?,product_price=?,initial_stock=?,quantity=?,warning_point=?,description=?,date_created=?,market_price=? where id=?", [product.product_name, product.category_id, product.product_price, product.initial_stock, product.quantity, product.warning_point, product.description, product.date_created, product.market_price, product.id]))
             .then(data => {return data;}).then(data => {
                 return product.id;
             });
@@ -355,7 +386,9 @@ export class Database {
     }
     public getReportProductTxByCategory(from_date: string, to_date: string, category_id: number, product_id: number): Promise<Product[]> {
         let products = Array<Product>();
-        let sql = "SELECT " + TABLE_PRODUCT_TX + ".tx_date as tx_date, " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
+        let sql = "SELECT " + TABLE_PRODUCT_TX + ".tx_date as tx_date," + TABLE_PRODUCT_TX + ".market_price as market_price, " + TABLE_PRODUCTS + ".*,"
+            + "sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold"
+            + " FROM "
             + TABLE_PRODUCTS
             + " LEFT JOIN " + TABLE_PRODUCT_TX + " ON " + TABLE_PRODUCT_TX + ".pid = " + TABLE_PRODUCTS + ".id ";
         sql += " where 1=1 and tx_date between '" + from_date + "'  and '" + to_date + "'";
@@ -390,6 +423,10 @@ export class Database {
                         product.description = p.description;
                         product.date_created = p.date_created;
                         product.txdate = p.tx_date;
+                        product.market_price = p.market_price;
+                        if (isNaN(p.market_price)) {
+                            product.market_price = 0;
+                        }
                         products.push(product)
                     }
                 }
@@ -401,7 +438,11 @@ export class Database {
     }
     public getReportProductTxByMonth(): Promise<Product[]> {
         let products = Array<Product>();
-        let sql = "SELECT strftime('%Y', " + TABLE_PRODUCT_TX + ".tx_date) as valYear, strftime('%m', " + TABLE_PRODUCT_TX + ".tx_date) as valMonth, " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
+        let sql = "SELECT strftime('%Y' , " + TABLE_PRODUCT_TX + ".tx_date) as valYear," + TABLE_PRODUCT_TX + ".market_price as market_price, "
+            + " strftime('%m', " + TABLE_PRODUCT_TX + ".tx_date) as valMonth,"
+            + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold, "
+            + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity*" + TABLE_PRODUCT_TX + ".market_price) as total "
+            + "FROM "
             + TABLE_PRODUCTS
             + " LEFT JOIN " + TABLE_PRODUCT_TX + " ON " + TABLE_PRODUCT_TX + ".pid = " + TABLE_PRODUCTS + ".id "
             + " group by strftime('%Y', " + TABLE_PRODUCT_TX + ".tx_date), strftime('%m', " + TABLE_PRODUCT_TX + ".tx_date)," + TABLE_PRODUCTS + ".id"
@@ -417,8 +458,13 @@ export class Database {
                         product.product_name = p.product_name;
                         product.category_id = p.category_id;
                         product.product_price = p.product_price;
+                        product.market_price = p.market_price;
+                        if (isNaN(p.market_price)) {
+                            product.market_price = 0;
+                        }
                         product.initial_stock = p.initial_stock;
                         product.quantity = p.quantity;
+                        product.total = p.total;
                         product.quantity_sold = p.quantity_sold;
                         product.warning_point = p.warning_point;
                         product.description = p.description;
@@ -435,7 +481,7 @@ export class Database {
     }
     public getReportProductTxByWeek(): Promise<Product[]> {
         let products = Array<Product>();
-        let sql = "SELECT strftime('%W', " + TABLE_PRODUCT_TX + ".tx_date, 'weekday 1') WeekNumber," +
+        let sql = "SELECT " + TABLE_PRODUCT_TX + ".market_price as market_price,strftime('%W', " + TABLE_PRODUCT_TX + ".tx_date, 'weekday 1') WeekNumber," +
             "max(date(" + TABLE_PRODUCT_TX + ".tx_date, 'weekday 1')) WeekStart," +
             "max(date(" + TABLE_PRODUCT_TX + ".tx_date, 'weekday 1', '+6 day')) WeekEnd, " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
             + TABLE_PRODUCTS
@@ -443,7 +489,7 @@ export class Database {
             + " group by WeekNumber," + TABLE_PRODUCTS + ".id"
             + " order by WeekNumber," + TABLE_PRODUCTS + ".id";
         console.log(sql);
-        
+
         return this.dbPromise
             .then(db => db.execute(sql))
             .then(resultSet => {
@@ -462,6 +508,10 @@ export class Database {
                         product.description = p.description;
                         product.date_created = p.date_created;
                         product.txdate = p.WeekNumber;
+                        if (p.market_price == undefined || p.market_price == null || p.market_price == '') {
+                            product.market_price = 0;
+                        }
+                        product.market_price = product.market_price;
                         products.push(product)
                     }
                 }

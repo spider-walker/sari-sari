@@ -56,6 +56,8 @@ export class SellPage {
         this.productTx.pid = this.product.id;
         this.productTx.tx_date = moment().format('YYYY-MM-DDTHH:mmZ');
         this.productTx.doctype = "sell";
+        this.productTx.market_price = this.product.market_price;
+        console.log(this.productTx.market_price)
         if (isNaN(this.productTx.quantity)) {
             self.showAlert("Please check", "Quantity to sell must be zero!");
             return;
