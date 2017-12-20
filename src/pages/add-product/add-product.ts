@@ -66,7 +66,7 @@ export class AddProductPage {
             return;
         }
         if (isNaN(this.product.product_price)) {
-            self.showAlert("Please check", "Product Price  must be a number!");
+            self.showAlert("Please check", "Retail  Price  must be a number!");
             return;
         }
         if (isNaN(this.product.market_price)) {

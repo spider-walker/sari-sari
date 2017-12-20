@@ -31,7 +31,7 @@ export class MonthlyReportPage {
             this.over_all_market=0;
             for (let item of this.products) {
                 this.over_all_profit+=item.quantity_sold*item.product_price-item.quantity_sold*item.market_price;
-                this.over_all_profit+=item.quantity_sold*item.market_price;
+                this.over_all_market+=item.quantity_sold*item.product_price;
             }
         }, (error) => {
             console.log("ERROR: ", error);
