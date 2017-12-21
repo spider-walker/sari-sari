@@ -40,18 +40,19 @@ export class CategoryPage {
         this.database.getSearchProducts(this.search).then(
             products => {
                 this.category = [];
-                let p = "";
-                for (let item of products) {
-                    let c = {category_id: item.category_id, category_name: item.category_name, products: []};
-                    if (!this.is_in_array(this.category, c)) {
-                        this.category.push({category_id: item.category_id, category_name: item.category_name, products: []})
+                if (products !== undefined) {
+                    for (let item of products) {
+                        let c = {category_id: item.category_id, category_name: item.category_name, products: []};
+                        if (!this.is_in_array(this.category, c)) {
+                            this.category.push({category_id: item.category_id, category_name: item.category_name, products: []})
+                        }
                     }
-                }
-                for (let item of this.category) {
-                    for (let a of products) {
-                        if (a.category_name == item.category_name) {
-                            let c = item.products;
-                            c.push(a);
+                    for (let item of this.category) {
+                        for (let a of products) {
+                            if (a.category_name == item.category_name) {
+                                let c = item.products;
+                                c.push(a);
+                            }
                         }
                     }
                 }

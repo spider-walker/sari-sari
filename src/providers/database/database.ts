@@ -20,10 +20,10 @@ export class Database {
         });
     }
     public opendb(id: any) {
-        let version = 11;
+        let version = 12;
 
         let db_version = "CREATE TABLE IF NOT EXISTS  " + TABLE_DB_VERSION + "(version_no INTEGER PRIMARY KEY ,txdate date) ";
-        this.dbPromise = SqlDatabase.open('Sari.db', [db_version]);
+        this.dbPromise = SqlDatabase.open('_Sari.db', [db_version]);
         this.dbPromise
             .then(db => db.execute("INSERT or IGNORE INTO " + TABLE_DB_VERSION + " (version_no,txdate ) VALUES (?,date('now') )",
                 [1]))
@@ -38,13 +38,14 @@ export class Database {
             + "category_name text"
             + ")";
 
-        this.dbPromise = SqlDatabase.open('Sari.db', [createCategoryStatement]);
+        this.dbPromise = SqlDatabase.open('_Sari.db', [createCategoryStatement]);
 
         let createProductStatement = "CREATE TABLE IF NOT EXISTS "
             + TABLE_PRODUCTS
             + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "product_name text,"
             + "product_price  number,"
+            + "category_id  number,"
             + "market_price  number,"
             + "initial_stock  number,"
             + "quantity  number,"
@@ -53,7 +54,7 @@ export class Database {
             + "date_created text"
             + ")";
 
-        this.dbPromise = SqlDatabase.open('Sari.db', [createProductStatement]);
+        this.dbPromise = SqlDatabase.open('_Sari.db', [createProductStatement]);
         let insertProductTxStatement = "CREATE TABLE IF NOT EXISTS "
             + TABLE_PRODUCT_TX
             + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -64,8 +65,8 @@ export class Database {
             + "doctype text,"
             + "tx_date  text"
             + ")";
-        this.dbPromise = SqlDatabase.open('Sari.db', [insertProductTxStatement]);
-
+        this.dbPromise = SqlDatabase.open('_Sari.db', [insertProductTxStatement]);
+        let add_category_id_to_products = "ALTER TABLE " + TABLE_PRODUCTS + " ADD COLUMN category_id number";
         let add_category_id_to_products_1 = "ALTER TABLE " + TABLE_PRODUCTS + " ADD COLUMN market_price number";
         let add_category_id_to_products_2 = "ALTER TABLE " + TABLE_PRODUCT_TX + " ADD COLUMN market_price number";
         let add_category_id_to_products_3 = "update " + TABLE_PRODUCT_TX + " set market_price=0 where  market_price=''|| market_price=null || market_price='undefined'";
@@ -78,19 +79,23 @@ export class Database {
                     console.log("Db version " + p.version_no);
                     console.log("Next Db version " + version);
                     if (p.version_no != version) {
-                        SqlDatabase.open('Sari.db', [add_category_id_to_products_1])
+                        SqlDatabase.open('_Sari.db', [add_category_id_to_products])
                             .catch(e => {
                                 console.log(e);
                             });;
-                        SqlDatabase.open('Sari.db', [add_category_id_to_products_2])
+                            SqlDatabase.open('_Sari.db', [add_category_id_to_products_1])
                             .catch(e => {
                                 console.log(e);
                             });;
-                        SqlDatabase.open('Sari.db', [add_category_id_to_products_3])
+                        SqlDatabase.open('_Sari.db', [add_category_id_to_products_2])
                             .catch(e => {
                                 console.log(e);
                             });;
-                        SqlDatabase.open('Sari.db', [add_category_id_to_products_4])
+                        SqlDatabase.open('_Sari.db', [add_category_id_to_products_3])
+                            .catch(e => {
+                                console.log(e);
+                            });;
+                        SqlDatabase.open('_Sari.db', [add_category_id_to_products_4])
                             .catch(e => {
                                 console.log(e);
                             });;
@@ -248,7 +253,7 @@ export class Database {
         }
 
         sql += " group by " + TABLE_PRODUCTS + ".id, product_name," + TABLE_PRODUCTS + ".category_id," + TABLE_PRODUCTS + ".product_price,initial_stock," + TABLE_PRODUCTS + ".quantity,warning_point,description,date_created"
-        sql += " order by " + TABLE_PRODUCTS + ".category_id,product_name"
+        sql += " order by " + TABLE_PRODUCTS + ".category_id,product_name";
         return this.dbPromise
             .then(db => db.execute(sql))
             .then(resultSet => {
