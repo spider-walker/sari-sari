@@ -5,13 +5,14 @@ export class Product {
     category_id: number;
     product_price: number;
     initial_stock: number;
-    quantity: number;
-    quantity_sold: number;
-    warning_point: number;
+    quantity_added: number=0;
+    quantity: number=0;
+    quantity_sold: number=0;
+    warning_point: number=0;
     description: string;
     date_created: string;
-    market_price: number;
-    total:number;
+    market_price: number=0;
+    total: number;
     txdate: string;
 
 
@@ -25,9 +26,10 @@ export class ProductTx {
     id: number;
     pid: number;
     doctype: string;
-    quantity: number;
-    product_price: number;
-    market_price: number;
+    quantity: number=0;
+    quantity_added: number=0;
+    product_price: number=0;
+    market_price: number=0;
     total: number;
     tx_date: string;
 

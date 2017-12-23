@@ -72,6 +72,8 @@ export class DetailProductPage {
     }
     sell_product(id: any) {
         this.navCtrl.push('SellPage', {id: this.product.id})
+    }add_product(id: any) {
+        this.navCtrl.push('AddStockPage', {id: this.product.id})
     }
     get_product_category(category_id:number){
         

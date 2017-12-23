@@ -12,6 +12,7 @@ export class HomePage {
         this.menu_pages = [
             {title: 'Category', component: 'CategoryPage'},
             {title: 'Add', component: 'AddProductPage'},
+            {title: 'Add Stock', component: 'AddStockPage'},
             {title: 'Sell', component: 'SellProductPage'},
             {title: 'Update', component: 'UpdateProductPage'},
             {title: 'Inventory List', component: 'ListProductPage'},

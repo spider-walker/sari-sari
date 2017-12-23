@@ -67,7 +67,6 @@ export class EditProductPage {
         this.product.product_price = this.productForm.controls['product_price'].value;
         this.product.market_price = this.productForm.controls['market_price'].value;
         this.product.initial_stock = this.productForm.controls['initial_stock'].value;
-        this.product.quantity = this.productForm.controls['quantity'].value;
         this.product.warning_point = this.productForm.controls['warning_point'].value;
         this.product.description = this.productForm.controls['description'].value;
         if (!this.productForm.controls['product_name'].valid) {

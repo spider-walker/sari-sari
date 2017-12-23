@@ -22,6 +22,7 @@
             <ion-col>Name</ion-col>
             <ion-col>Market Price</ion-col>
             <ion-col>Retail Price</ion-col>
+            <ion-col>Qty Added</ion-col>
             <ion-col>Qty Sold</ion-col>
             <ion-col>Total in Market Price</ion-col>
             <ion-col>Total in Retail Price</ion-col>
@@ -32,6 +33,7 @@
             <ion-col>{{item.product_name }}</ion-col>             
             <ion-col>{{item.market_price}}</ion-col>
             <ion-col>{{item.product_price}}</ion-col>
+            <ion-col>{{item.quantity_added}}</ion-col>
             <ion-col>{{item.quantity_sold}}</ion-col>
             <ion-col style="text-align: right">{{item.quantity_sold*item.market_price}}</ion-col>
             <ion-col style="text-align: right">{{item.quantity_sold*item.product_price}}</ion-col>
@@ -42,7 +44,7 @@
             <ion-col></ion-col>
             <ion-col></ion-col>
             <ion-col></ion-col>
-            <ion-col></ion-col>
+            <ion-col></ion-col> <ion-col></ion-col>
             <ion-col style="text-align: right">{{over_all_market}}</ion-col>
             <ion-col style="text-align: right">{{over_all_retail}}</ion-col>
             <ion-col style="text-align: right">{{over_all_profit}}</ion-col>

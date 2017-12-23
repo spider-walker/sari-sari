@@ -6,7 +6,7 @@
 
         <ion-title>Product Detail</ion-title>
 
-        
+
     </ion-navbar>
 </ion-header>
 
@@ -16,7 +16,7 @@
             Product Name:{{product?.product_name}}
         </ion-item>
         <ion-item>
-           Category:{{product?.category_name}}
+            Category:{{product?.category_name}}
 
         </ion-item>
         <ion-item>
@@ -47,6 +47,7 @@
     <ion-list>
         <ion-item>
             <a ion-button  color="primary" (click)="edit()" >Edit Product</a>
+            <a ion-button  color="primary" (click)="add_product()" >Add Stock</a>
             <a ion-button  color="primary" (click)="sell_product()" >Sell Product</a>
             <a ion-button  color="primary" (click)="delete_product()" >Delete</a>
 
