@@ -486,6 +486,9 @@ export class Database {
                         product.description = p.description;
                         product.date_created = p.date_created;
                         product.txdate = p.valMonth + "-" + p.valYear;
+                        if(p.valMonth==null||p.valYear==null){
+                            product.txdate = "12-2017"; 
+                        }
                         product.quantity_added = p.quantity_added;
                         if (isNaN(parseInt(p.quantity_added))) {
                             product.quantity_added = 0;
