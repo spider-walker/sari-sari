@@ -239,7 +239,7 @@ export class Database {
 
     }
 
-    public getSearchProducts(search: string) {
+    public getSearchProducts(search: string): Promise<Product[]> {
         let products = Array<Product>();
         let sql = "SELECT " + TABLE_CATEGORY + ".category_name as category_name," + TABLE_PRODUCT_TX + ".market_price as market_price,"
             + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold ,,sum(" + TABLE_PRODUCT_TX + ".quantity_added) as quantity_added ,"
@@ -283,13 +283,13 @@ export class Database {
                         products.push(product)
                     }
                 }
-                return  (products);;
+                return  Promise.resolve(products);
             }).catch(error => {
                 console.log(error);
             });
 
     }
-    public getSearchProductsByCategory(search: string, category_id: number) {
+    public getSearchProductsByCategory(search: string, category_id: number): Promise<Product[]> {
         let products = Array<Product>();
         let sql = "SELECT " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
             + TABLE_PRODUCTS
@@ -399,7 +399,7 @@ export class Database {
             });
 
     }
-    public getReportProductTxByCategory(from_date: string, to_date: string, category_id: number, product_id: number) {
+    public getReportProductTxByCategory(from_date: string, to_date: string, category_id: number, product_id: number): Promise<Product[]> {
         let products = Array<Product>();
         let sql = "SELECT " + TABLE_PRODUCT_TX + ".tx_date as tx_date,"
             + TABLE_PRODUCT_TX + ".market_price as market_price, "
@@ -458,7 +458,7 @@ export class Database {
             });
 
     }
-    public getReportProductTxByMonth() {
+    public getReportProductTxByMonth(): Promise<Product[]> {
         let products = Array<Product>();
         let sql = "SELECT strftime('%Y' , " + TABLE_PRODUCT_TX + ".tx_date) as valYear," + TABLE_PRODUCT_TX + ".market_price as market_price, "
             + " strftime('%m', " + TABLE_PRODUCT_TX + ".tx_date) as valMonth,"
@@ -509,7 +509,7 @@ export class Database {
             });
 
     }
-    public getReportProductTxByWeek()  {
+    public getReportProductTxByWeek() : Promise<Product[]> {
         let products = Array<Product>();
         let sql = "SELECT " + TABLE_PRODUCT_TX + ".market_price as market_price,strftime('%W', " + TABLE_PRODUCT_TX + ".tx_date, 'weekday 1') WeekNumber," +
             "max(date(" + TABLE_PRODUCT_TX + ".tx_date, 'weekday 1')) WeekStart," +
