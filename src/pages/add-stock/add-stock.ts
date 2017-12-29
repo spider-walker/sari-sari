@@ -30,12 +30,12 @@ export class AddStockPage {
         if (this.id == undefined) {
             return;
         }
-        console.log(this.id)
         for (let item of this.products) {
             if (item.id == this.id) {
-                this.product = item;
-                console.log(this.product);
+                this.product = item; 
                 (<FormControl> this.productForm.controls['market_price']).setValue(this.product.market_price, {onlySelf: true});
+                (<FormControl> this.productForm.controls['quantity_in_stock']).setValue(this.product.quantity, {onlySelf: true});
+                (<FormControl> this.productForm.controls['quantity_sold']).setValue(this.product.quantity_sold, {onlySelf: true});
 
             }
         }
@@ -46,6 +46,8 @@ export class AddStockPage {
             market_price: ['',],
             tx_date: ['',],
             quantity_added: ['1',],
+            quantity_in_stock: ['0',],
+            quantity_sold: ['0',],
         });
         this.id = this.navParams.get('id');
         (<FormControl> this.productForm.controls['product_id']).setValue(this.id, {onlySelf: true});

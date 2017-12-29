@@ -125,8 +125,11 @@ export class Database {
     }
     public getProducts() {
         let products = Array<Product>();
+        let sql = "SELECT " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX+".quantity) as quantity_sold FROM " + TABLE_PRODUCTS;
+        sql += " LEFT JOIN  " + TABLE_PRODUCT_TX+ " on " + TABLE_PRODUCT_TX+".pid=" + TABLE_PRODUCTS + ".id and doctype='sell' "
+        console.log(sql)
         return this.dbPromise
-            .then(db => db.execute("SELECT * FROM " + TABLE_PRODUCTS))
+            .then(db => db.execute(sql))
             .then(resultSet => {
                 if (resultSet.rows.length > 0) {
                     for (let i = 0; i < resultSet.rows.length; i++) {
@@ -150,7 +153,11 @@ export class Database {
         if (isNaN(parseInt(p.market_price))) {
             product.market_price = 0;
         }
-
+        product.quantity_added = p.quantity_added;
+        if (isNaN(parseInt(p.quantity_added))) {
+            product.quantity_added = 0;
+        }
+        product.quantity_sold = p.quantity_sold;
         product.warning_point = p.warning_point;
         product.description = p.description;
         product.date_created = p.date_created;
@@ -232,7 +239,7 @@ export class Database {
 
     }
 
-    public getSearchProducts(search: string): Promise<Product[]> {
+    public getSearchProducts(search: string) {
         let products = Array<Product>();
         let sql = "SELECT " + TABLE_CATEGORY + ".category_name as category_name," + TABLE_PRODUCT_TX + ".market_price as market_price,"
             + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold ,,sum(" + TABLE_PRODUCT_TX + ".quantity_added) as quantity_added ,"
@@ -276,13 +283,13 @@ export class Database {
                         products.push(product)
                     }
                 }
-                return Promise.resolve(products);;
+                return  (products);;
             }).catch(error => {
                 console.log(error);
             });
 
     }
-    public getSearchProductsByCategory(search: string, category_id: number): Promise<Product[]> {
+    public getSearchProductsByCategory(search: string, category_id: number) {
         let products = Array<Product>();
         let sql = "SELECT " + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold FROM "
             + TABLE_PRODUCTS
@@ -392,7 +399,7 @@ export class Database {
             });
 
     }
-    public getReportProductTxByCategory(from_date: string, to_date: string, category_id: number, product_id: number): Promise<Product[]> {
+    public getReportProductTxByCategory(from_date: string, to_date: string, category_id: number, product_id: number) {
         let products = Array<Product>();
         let sql = "SELECT " + TABLE_PRODUCT_TX + ".tx_date as tx_date,"
             + TABLE_PRODUCT_TX + ".market_price as market_price, "
@@ -451,7 +458,7 @@ export class Database {
             });
 
     }
-    public getReportProductTxByMonth(): Promise<Product[]> {
+    public getReportProductTxByMonth() {
         let products = Array<Product>();
         let sql = "SELECT strftime('%Y' , " + TABLE_PRODUCT_TX + ".tx_date) as valYear," + TABLE_PRODUCT_TX + ".market_price as market_price, "
             + " strftime('%m', " + TABLE_PRODUCT_TX + ".tx_date) as valMonth,"
@@ -486,8 +493,8 @@ export class Database {
                         product.description = p.description;
                         product.date_created = p.date_created;
                         product.txdate = p.valMonth + "-" + p.valYear;
-                        if(p.valMonth==null||p.valYear==null){
-                            product.txdate = "12-2017"; 
+                        if (p.valMonth == null || p.valYear == null) {
+                            product.txdate = "12-2017";
                         }
                         product.quantity_added = p.quantity_added;
                         if (isNaN(parseInt(p.quantity_added))) {
@@ -496,13 +503,13 @@ export class Database {
                         products.push(product)
                     }
                 }
-                return Promise.resolve(products);;
-                }).catch(error => {
-                    console.log(error);
-                });
+                return (products);;
+            }).catch(error => {
+                console.log(error);
+            });
 
     }
-    public getReportProductTxByWeek(): Promise<Product[]> {
+    public getReportProductTxByWeek()  {
         let products = Array<Product>();
         let sql = "SELECT " + TABLE_PRODUCT_TX + ".market_price as market_price,strftime('%W', " + TABLE_PRODUCT_TX + ".tx_date, 'weekday 1') WeekNumber," +
             "max(date(" + TABLE_PRODUCT_TX + ".tx_date, 'weekday 1')) WeekStart," +
@@ -542,7 +549,7 @@ export class Database {
                         products.push(product)
                     }
                 }
-                return Promise.resolve(products);;
+                return  (products);;
             }).catch(error => {
                 console.log(error);
             });
