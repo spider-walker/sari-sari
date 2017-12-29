@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {IonicPage, NavController, NavParams, AlertController} from 'ionic-angular';
-import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
+import {FormGroup, FormControl, FormBuilder, Validators} from '@angular/forms';
 import {Database} from '../../providers/database/database';
 import {Product} from '../../models/models';
 import {ProductTx} from '../../models/models';
@@ -32,17 +32,14 @@ export class AddStockPage {
         }
         for (let item of this.products) {
             if (item.id == this.id) {
-                this.product = item; 
-                (<FormControl> this.productForm.controls['market_price']).setValue(this.product.market_price, {onlySelf: true});
-                (<FormControl> this.productForm.controls['quantity_in_stock']).setValue(this.product.quantity, {onlySelf: true});
-                (<FormControl> this.productForm.controls['quantity_sold']).setValue(this.product.quantity_sold, {onlySelf: true});
+                this.product = item;
 
             }
         }
     }
     ngOnInit(): void {
         this.productForm = this._fb.group({
-            product_id: ['',],
+            product_id: ['', [Validators.required]],
             market_price: ['',],
             tx_date: ['',],
             quantity_added: ['1',],
@@ -59,19 +56,22 @@ export class AddStockPage {
         var self = this;
         this.productTx = new ProductTx;
         this.productTx.quantity_added = parseInt(this.productForm.controls['quantity_added'].value);
-        this.productTx.market_price = parseInt(this.productForm.controls['market_price'].value);
-
+         if (isNaN(this.productTx.quantity_added)) {
+            self.showAlert("Please check", "Quantity to add  must not be zero!");
+            return;
+        }
+        if (!this.productForm.valid) {
+            self.showAlert("Please check", "You must select a product");
+            return;
+        }
+        
+        this.productTx.market_price = this.product.market_price;
         this.productTx.product_price = this.product.product_price;
         this.productTx.pid = this.product.id;
         this.productTx.tx_date = moment().format('YYYY-MM-DDTHH:mmZ');
         this.productTx.tx_date = this.productForm.controls['tx_date'].value;
         this.productTx.doctype = "add";
         this.product.market_price = this.productTx.market_price;
-        console.log(this.productTx.market_price)
-        if (isNaN(this.productTx.quantity_added)) {
-            self.showAlert("Please check", "Quantity to add  must not be zero!");
-            return;
-        }
 
         if (this.productForm.valid) {
             let a =
@@ -84,7 +84,6 @@ export class AddStockPage {
             this.database.insertProductTx(this.productTx).then((result) => {
                 let total_price = self.productTx.quantity_added * self.productTx.market_price;
                 self.showAlert("Success", "Product Added: " + self.productTx.quantity_added + "<br/> Total Cost:" + total_price.toFixed(2));
-                (<FormControl> this.productForm.controls['market_price']).setValue(this.product.market_price, {onlySelf: true});
                 (<FormControl> this.productForm.controls['quantity_added']).setValue('0', {onlySelf: true});
                 this.get_item();
 
