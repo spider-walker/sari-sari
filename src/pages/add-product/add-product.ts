@@ -92,9 +92,7 @@ export class AddProductPage {
                 (<FormControl> this.productForm.controls['quantity']).setValue('0', {onlySelf: true});
                 (<FormControl> this.productForm.controls['warning_point']).setValue('0', {onlySelf: true});
                 (<FormControl> this.productForm.controls['description']).setValue('0', {onlySelf: true});
-
-
-               // this.navCtrl.push('DetailProductPage', {id: result})
+                this.navCtrl.push('DetailProductPage', {id: result})
             }, (error) => {
                 console.log("ERROR: ", error);
             });

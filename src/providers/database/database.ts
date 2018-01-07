@@ -242,8 +242,8 @@ export class Database {
     public getSearchProducts(search: string): Promise<Product[]> {
         let products = Array<Product>();
         let sql = "SELECT " + TABLE_CATEGORY + ".category_name as category_name," + TABLE_PRODUCT_TX + ".market_price as market_price,"
-            + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold ,,sum(" + TABLE_PRODUCT_TX + ".quantity_added) as quantity_added ,"
-            + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity*" + TABLE_PRODUCT_TX + ".market_price) as total "
+            + TABLE_PRODUCTS + ".*,sum(" + TABLE_PRODUCT_TX + ".quantity) as quantity_sold ,sum(" + TABLE_PRODUCT_TX + ".quantity_added) as quantity_added ,"
+            + " sum(" + TABLE_PRODUCT_TX + ".quantity*" + TABLE_PRODUCT_TX + ".market_price) as total "
             + " FROM "
             + TABLE_PRODUCTS
             + " JOIN " + TABLE_CATEGORY + " ON " + TABLE_CATEGORY + ".category_id = " + TABLE_PRODUCTS + ".category_id  "
